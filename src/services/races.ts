@@ -1,6 +1,4 @@
-import { RaceEntry } from "../common/types/types";
-
-const racesEntry: Array<RaceEntry> = [{
+const racesEntry = [{
     "_id": 1,
     "processed": false,
     "day_celebrate": "05/02/2022",
@@ -36,6 +34,3 @@ const racesEntry: Array<RaceEntry> = [{
     "url": "https://sportmaniacs.com/es/races/rankings/6280b734-22cc-4695-8d67-7c2fac1f1277",
     "collection_name": "carrera_5"
   }]
-
-
-export default racesEntry
