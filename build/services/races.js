@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const racesEntry = [{
         "_id": 1,
         "processed": false,
@@ -36,5 +35,4 @@ const racesEntry = [{
         "url": "https://sportmaniacs.com/es/races/rankings/6280b734-22cc-4695-8d67-7c2fac1f1277",
         "collection_name": "carrera_5"
     }];
-exports.default = racesEntry;
 //# sourceMappingURL=races.js.map
