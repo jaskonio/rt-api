@@ -2,13 +2,6 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "type": "npm",
-        "script": "build",
-        "group": "build",
-        "label": "npm: build - app",
-        "detail": "NODE_ENV=development tsc -p ."
-      },
-      {
         "label": "start db",
         "type": "shell",
         "command": "docker compose up -d"
@@ -19,16 +12,16 @@
         "command": "docker compose down"
       },
       {
+        "label": "Clean app",
         "type": "shell",
-        "label": "clean app",
         "command": "rm -rf ./build"
       },
       {
-        "label": "prepare app to debug",
+        "label": "Build",
         "type": "shell",
-        "command": "echo prepare app to debug",
-        "dependsOrder": "sequence",
-        "dependsOn": ["npm run build"]
+        "command": "npm run tsc",
+        "problemMatcher": [],
+        "dependsOn": ["Clean app"]
       }
     ]
   }

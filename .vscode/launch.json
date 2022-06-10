@@ -13,7 +13,7 @@
           "${workspaceFolder}/**",
           "!**/node_modules/**"
         ],
-        "preLaunchTask": "prepare app to debug"
+        "preLaunchTask": "Build"
       }
     ]
   }
