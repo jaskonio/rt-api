@@ -1,9 +1,9 @@
 import mongoose from "mongoose"
 
 export interface IRace {
+    name: string
     processed: boolean
     day_celebrate: string
-    name: string
     url: string
     collection_name: string
 }

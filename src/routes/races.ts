@@ -19,7 +19,7 @@ router.get('/', async (_req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     console.log('Get by race')
-
+    
     const id = req.params.id
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
