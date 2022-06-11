@@ -1,6 +1,7 @@
 import express, { Request, Response }  from "express"
 import mongoose, { CallbackWithoutResult } from "mongoose"
 import { Race, RaceDoc }  from '../models/raceModel'
+import { getRankingsDatabyRace, saveRankingsData } from "../services/raceService"
 
 const router = express.Router()
 
@@ -99,8 +100,35 @@ router.post('/process/all', (_req: Request, res: Response) => {
     res.send('process all Race')
 })
 
-router.post('/process/:id', (_req: Request, res: Response) => {
-    res.send('proces by Race')
+router.post('/process/:id', async (req: Request, res: Response) => {
+    const id = req.params.id
+
+    try {
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            res.status(404).send({ message: "Please provide correct id" })
+            return
+        }
+    
+        const race = await Race.findById(id)
+        
+        if (race == null) {
+            res.status(404).send({ message: "no data exist for this id" })
+            return
+        }
+
+        const url = race.url
+
+        let data = await getRankingsDatabyRace(url);
+
+        await saveRankingsData(race.collection_name, data)
+        
+        res.status(201).send()
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error});
+    }
 })
 
 export default router
