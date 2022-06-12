@@ -3,6 +3,7 @@ import * as mongooseUtils from '../utils/mongoose'
 import { IRace, Race, RaceDoc }  from '../models/raceModel'
 import { RaceRow } from '../models/raceRowModel'
 import { IRankingsSportmaniacs, IResponseSportmaniacs } from '../models/sportmaniacsModel'
+import { RaceProcessed } from '../models/raceProcessedModel'
 
 export async function getAll() {
     const races = await Race.find({})
@@ -74,7 +75,7 @@ export async function saveRankingsData(collection_name:string, data: any[]) {
     }
 }
 
-export async function saveRowData(race: RaceDoc) {
+export async function saveRowData(race: RaceDoc): Promise<IRankingsSportmaniacs[]> {
     try {
         const data = await getRankingsDatabyRace(race.url);
 
@@ -104,3 +105,18 @@ export function getProcessedData(rows: IRankingsSportmaniacs[]): IRankingsSportm
     return filteredRows
 }
 
+export async function saveProcessedData(race: RaceDoc, rows: IRankingsSportmaniacs[]): Promise<IRankingsSportmaniacs[]> {
+    const data = getProcessedData(rows)
+
+    const raceProcessedDocument = await RaceProcessed.findOne({ raceId: race.id})
+
+    if (raceProcessedDocument == null) {
+        const raceProcessedDocument = await RaceProcessed.build({raceId: race._id, data: data})
+        await raceProcessedDocument.save()
+    }
+    else{
+        raceProcessedDocument.updateOne({data: data})
+    }
+
+    return data
+}

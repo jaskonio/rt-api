@@ -34,9 +34,9 @@ export async function post(req: Request, res: Response) {
     try{
         console.log('Save race')
 
-        const { processed, celebrateDay, name, url, seasonId, data } = req.body
+        const { processed, celebrateDay, name, url, seasonId } = req.body
 
-        const newrace = RaceService.save({ processed, celebrateDay, name, url, seasonId, data })
+        const newrace = RaceService.save({ processed, celebrateDay, name, url, seasonId })
 
         res.json(newrace)
     } catch (e) {
@@ -62,9 +62,9 @@ export async function put(req: Request, res: Response) {
             return
         }
 
-        const { name, processed, celebrateDay, url, seasonId, data } = req.body
+        const { name, processed, celebrateDay, url, seasonId } = req.body
 
-        await document.update({ name, processed, celebrateDay, url, seasonId, data })
+        await document.update({ name, processed, celebrateDay, url, seasonId })
 
         const updatedDocument = await RaceService.getById(id)
         
@@ -110,9 +110,7 @@ export async function processById(req: Request, res: Response) {
 
         const data = await RaceService.saveRowData(race);
 
-        const processedData = await RaceService.getProcessedData(data)
-
-        await race.updateOne({data: processedData})
+        await RaceService.saveProcessedData(race, data)
 
         res.status(201).send()
 

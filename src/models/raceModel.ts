@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import { IRankingsSportmaniacs } from "./sportmaniacsModel"
 
 export interface IRace {
     name: string
@@ -7,7 +6,6 @@ export interface IRace {
     celebrateDay: string
     url: string
     seasonId: string
-    data: IRankingsSportmaniacs[]
 }
 
 interface raceModelinterface extends mongoose.Model<RaceDoc> {
@@ -20,7 +18,6 @@ export interface RaceDoc extends mongoose.Document {
     celebrateDay: string
     url: string
     seasonId: string
-    data: IRankingsSportmaniacs[]
 }
 
 const raceSchema = new mongoose.Schema({
@@ -44,10 +41,6 @@ const raceSchema = new mongoose.Schema({
     seasonId: {
         type: String,
         required: true
-    },
-    data: {
-        type: mongoose.SchemaTypes.Mixed,
-        required: false  
     }
 })
 
