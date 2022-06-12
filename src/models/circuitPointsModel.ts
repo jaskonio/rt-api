@@ -55,6 +55,6 @@ circuitPointsSchema.statics.build = (attr: ICircuitPoints) => {
     return new CircuitPoints(attr)
 }
 
-const CircuitPoints = mongoose.model<CircuitPointsDoc, circuitPointsModelinterface>('CircuitPointss', circuitPointsSchema)
+const CircuitPoints = mongoose.model<CircuitPointsDoc, circuitPointsModelinterface>('CircuitPoints', circuitPointsSchema)
 
 export { CircuitPoints }

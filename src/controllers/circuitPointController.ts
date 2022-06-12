@@ -30,9 +30,9 @@ export async function getById(req: Request, res: Response) {
 }
 
 export async function post(req: Request, res: Response) {
-    try{
-        console.log('Save circuitPoints')
+    console.log('Save circuitPoints')
 
+    try {
         const { url, data, seasonId } = req.body
         
         const newDocument = await CircuitPointsService.save({ url, data, seasonId })
@@ -45,18 +45,12 @@ export async function post(req: Request, res: Response) {
 
 export async function put(req: Request, res: Response) {
     console.log('update circuitPoints')
+
     try {
         const id = req.params.id
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
             res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
-        
-        const circuitPoints = await CircuitPointsService.getById(id)
-        
-        if (circuitPoints == null) {
-            res.status(404).send({ message: "no data exist for this id" })
             return
         }
 
@@ -97,28 +91,18 @@ export async function processById(req: Request, res: Response) {
             return
         }
 
-        const currentCircuitPoints = await CircuitPointsService.getById(id)
-
-        if (currentCircuitPoints == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
-
-        const url = currentCircuitPoints.url
-
-        let data = await CircuitPointsService.getDatabyCircuitPoints(url)
-
-        const newDocuments =  {
-            "circuitPointsId": currentCircuitPoints._id,
-            "data": data
-        }
-
-        await CircuitPointsService.saveRankingsData(currentCircuitPoints.collection_name, newDocuments)
+        const status = await CircuitPointsService.processById(id)
         
+        if (status == null) {
+            throw new Error("Error Processed");
+            
+        }
+
         res.status(201).send()
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error});
+
+        res.status(500).json({ error })
     }
 }

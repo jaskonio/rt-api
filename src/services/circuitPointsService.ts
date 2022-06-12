@@ -1,5 +1,4 @@
 import axios from 'axios'
-import * as mongooseUtils from '../utils/mongoose'
 import * as pdfUtils from '../utils/pdfUtils'
 import * as requetsUtils from '../utils/requestsUtils'
 
@@ -50,13 +49,27 @@ export async function remove(id: string): Promise<void> {
     await CircuitPoints.deleteOne({id: id})
 }
 
+export async function processById(id: string): Promise<true | null> {
+    const circuitPointDocument = await getById(id)
+
+    if (circuitPointDocument == null) {
+        return null
+    }
+
+    const data = await getDatabyCircuitPoints(circuitPointDocument.url)
+
+    await circuitPointDocument.updateOne({data: data})
+
+    return true
+}
+
 export async function buildDocument(value: ICircuitPoints): Promise<CircuitPointsDoc> {
     const newDocument = CircuitPoints.build(value)
 
     return newDocument
 }
 
-export async function getDatabyCircuitPoints(circuitPointUrl: string) {
+async function getDatabyCircuitPoints(circuitPointUrl: string) {
     let url: string = circuitPointUrl;
 
     try {
@@ -77,17 +90,6 @@ export async function getDatabyCircuitPoints(circuitPointUrl: string) {
             console.log('unexpected error: ', error)
             throw 'An unexpected error occurred'
           }
-    }
-}
-
-export async function saveRankingsData(collectionName: string, data: any) {
-    try {
-        let newCollection = mongooseUtils.createModelForName(collectionName)
-
-        await newCollection.insertMany(data)
-    } catch (error: any) {
-        console.log('unexpected error: ', error)
-        throw 'An unexpected error occurred: '+ error?.message
     }
 }
 

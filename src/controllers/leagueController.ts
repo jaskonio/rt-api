@@ -40,8 +40,8 @@ export async function post(req: Request, res: Response) {
     console.log("POST League")
 
     try {
-        const { name, bibNumberIds } = req.body
-        const newLeague = League.build({ name, bibNumberIds })
+        const { seasonId, name, bibNumberIds } = req.body
+        const newLeague = League.build({ seasonId, name, bibNumberIds })
 
         await newLeague.save()
 

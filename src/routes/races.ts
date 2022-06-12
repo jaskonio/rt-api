@@ -13,8 +13,6 @@ router.put('/:id', RaceController.put)
 
 router.delete('/:id', RaceController.remove)
 
-router.post('/process/all', RaceController.processAll)
-
 router.post('/process/:id', RaceController.processById)
 
 export default router
