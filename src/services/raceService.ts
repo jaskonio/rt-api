@@ -1,7 +1,8 @@
 import axios from 'axios'
 import * as mongooseUtils from '../utils/mongoose'
-import { IRace, IRaceRanking, Race, RaceDoc }  from '../models/raceModel'
+import { IRace, Race, RaceDoc }  from '../models/raceModel'
 import { RaceRow } from '../models/raceRowModel'
+import { IRankingsSportmaniacs, IResponseSportmaniacs } from '../models/sportmaniacsModel'
 
 export async function getAll() {
     const races = await Race.find({})
@@ -41,15 +42,13 @@ export async function remove(id: string) {
     await Race.deleteOne({id: id})
 }
 
-export async function getRankingsDatabyRace(race_url: string): Promise<IRaceRanking[]> {
-    let url: string = race_url;
-
+export async function getRankingsDatabyRace(url: string): Promise<IRankingsSportmaniacs[]> {
     try {
-        let { data, status }  = await axios.get(url)
-        
-        console.log('response status is: ', status)
+        const data = await axios.get<IResponseSportmaniacs>(url).then( response => {
+            return response.data
+        })
 
-        const rankings = data.data.Rankings as IRaceRanking[]
+        const rankings = data.data.Rankings
 
         return rankings
 
@@ -95,10 +94,10 @@ export async function saveRowData(race: RaceDoc) {
         throw 'An unexpected error occurred: '+ error?.message
     }
 }
-export function getProcessedData(rows: IRaceRanking[]): IRaceRanking[] {
+export function getProcessedData(rows: IRankingsSportmaniacs[]): IRankingsSportmaniacs[] {
     const clubName = "REDOLAT TEAM"
     
-    const filteredRows = rows.filter( function(row: IRaceRanking){
+    const filteredRows = rows.filter( function(row: IRankingsSportmaniacs){
         return row.club.toLowerCase() == clubName.toLowerCase()
     });
 

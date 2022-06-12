@@ -1,9 +1,9 @@
 import mongoose from "mongoose"
-import { IRaceRanking } from "./raceModel"
+import { IRankingsSportmaniacs } from "./sportmaniacsModel"
 
 export interface IRaceRow {
     raceId: string
-    data: IRaceRanking[]
+    data: IRankingsSportmaniacs[]
 }
 
 interface raceRowModelinterface extends mongoose.Model<RaceRowDoc> {
@@ -12,7 +12,7 @@ interface raceRowModelinterface extends mongoose.Model<RaceRowDoc> {
 
 export interface RaceRowDoc extends mongoose.Document {
     raceId: string
-    data: IRaceRanking[]
+    data: IRankingsSportmaniacs[]
 }
 
 const raceRowSchema = new mongoose.Schema({
