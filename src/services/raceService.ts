@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as rankingModel from '../models/rankingModel'
+import * as mongooseUtils from '../utils/mongoose'
 
 export async function getRankingsDatabyRace(race_url: string) {
     let url: string = race_url;
@@ -24,7 +24,7 @@ export async function getRankingsDatabyRace(race_url: string) {
 
 export async function saveRankingsData(collection_name:string, data: any[]) {
     try {
-        let rankingDoc = rankingModel.createModelForName(collection_name)
+        let rankingDoc = mongooseUtils.createModelForName(collection_name)
 
         await rankingDoc.insertMany(data)
     } catch (error: any) {
