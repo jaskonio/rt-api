@@ -1,8 +1,9 @@
 import mongoose from "mongoose"
 
 export interface ILeague {
+    seasonId: string
     name: string
-    bibNumberIds: [string]
+    bibNumberIds: string[]
 }
 
 interface leagueModelinterface extends mongoose.Model<LeagueDoc> {
@@ -10,11 +11,16 @@ interface leagueModelinterface extends mongoose.Model<LeagueDoc> {
 }
 
 export interface LeagueDoc extends mongoose.Document {
+    seasonId: string
     name: string
-    bibNumberIds: [string]
+    bibNumberIds: string[]
 }
 
 const leagueSchema = new mongoose.Schema({
+    seasonId: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true

@@ -3,9 +3,9 @@ import mongoose from "mongoose"
 export interface IRace {
     name: string
     processed: boolean
-    day_celebrate: string
+    celebrateDay: string
     url: string
-    collection_name: string
+    seasonId: string
 }
 
 interface raceModelinterface extends mongoose.Model<RaceDoc> {
@@ -13,23 +13,24 @@ interface raceModelinterface extends mongoose.Model<RaceDoc> {
 }
 
 export interface RaceDoc extends mongoose.Document {
-    processed: boolean
-    day_celebrate: string
     name: string
+    processed: boolean
+    celebrateDay: string
     url: string
-    collection_name: string
+    seasonId: string
 }
 
 const raceSchema = new mongoose.Schema({
-    processed: {
-        type: Boolean,
-        required: true
-    },
-    day_celebrate: {
+    name: {
         type: String,
         required: true
     },
-    name: {
+    processed: {
+        type: Boolean,
+        default: false,
+        required: false
+    },
+    celebrateDay: {
         type: String,
         required: true
     },
@@ -37,10 +38,10 @@ const raceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    collection_name: {
+    seasonId: {
         type: String,
-        required: true
-    },
+        required: false
+    }
 })
 
 raceSchema.statics.build = (attr: IRace) => {

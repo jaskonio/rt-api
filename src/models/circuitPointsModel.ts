@@ -1,9 +1,28 @@
 import mongoose from "mongoose"
 
+export interface ICircuitPointsData {
+    dorsal: number
+    fullName: string
+    pointsRace1: number
+    pointsRace2: number
+    pointsRace3: number
+    pointsRace4: number
+    pointsRace5: number
+    pointsRace6: number
+    pointsRace7: number
+    pointsRace8: number
+    pointsRace9: number
+    pointsRace10: number
+    totalPoints: number
+    participaciones: number
+    position: number
+}
+
 export interface ICircuitPoints {
-    name: string
-    url: string  
-    collection_name: string
+    url: string
+    data: ICircuitPointsData[] | null
+
+    seasonId: string
 }
 
 interface circuitPointsModelinterface extends mongoose.Model<CircuitPointsDoc> {
@@ -11,21 +30,22 @@ interface circuitPointsModelinterface extends mongoose.Model<CircuitPointsDoc> {
 }
 
 export interface CircuitPointsDoc extends mongoose.Document {
-    name: string
-    url: string  
-    collection_name: string
+    url: string
+    data: ICircuitPointsData[] | null
+
+    seasonId: string
 }
 
 const circuitPointsSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
     url: {
         type: String,
         required: true
     },
-    collection_name: {
+    data: {
+        type: mongoose.SchemaTypes.Mixed,
+        required: false
+    },
+    seasonId: {
         type: String,
         required: true
     }

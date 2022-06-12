@@ -4,8 +4,57 @@ import * as pdfUtils from '../utils/pdfUtils'
 import * as requetsUtils from '../utils/requestsUtils'
 
 import { join } from 'path';
+import { CircuitPoints, CircuitPointsDoc, ICircuitPoints, ICircuitPointsData } from '../models/circuitPointsModel';
 
 var crypto = require("crypto");
+
+export async function getAll(): Promise<(CircuitPointsDoc & { _id: any })[]>  {
+    const documents = await CircuitPoints.find({})
+
+    return documents
+}
+
+export async function getById(id: string): Promise<(CircuitPointsDoc & { _id: any;}) | null>  {
+    const document = await CircuitPoints.findById(id)
+
+    if (document === null) {
+        return null
+    }
+
+    return document
+}
+
+export async function save(doc: ICircuitPoints): Promise<CircuitPointsDoc> {
+    const newDocument = CircuitPoints.build(doc)
+
+    await newDocument.save()
+
+    return newDocument
+}
+
+export async function update(id: string, newDocument: ICircuitPoints): Promise<(CircuitPointsDoc & {_id: any;}) | null> {
+    const currentDocument = await getById(id)
+
+    if (currentDocument === null) {
+        throw { message: "no data exist for this id" }
+    }
+
+    await currentDocument.updateOne(newDocument)
+
+    const updatedDocument = await getById(id)
+
+    return updatedDocument
+}
+
+export async function remove(id: string): Promise<void> {
+    await CircuitPoints.deleteOne({id: id})
+}
+
+export async function buildDocument(value: ICircuitPoints): Promise<CircuitPointsDoc> {
+    const newDocument = CircuitPoints.build(value)
+
+    return newDocument
+}
 
 export async function getDatabyCircuitPoints(circuitPointUrl: string) {
     let url: string = circuitPointUrl;
@@ -42,26 +91,8 @@ export async function saveRankingsData(collectionName: string, data: any) {
     }
 }
 
-export interface ICircuitPoints {
-    dorsal: number
-    fullName: string
-    pointsRace1: number
-    pointsRace2: number
-    pointsRace3: number
-    pointsRace4: number
-    pointsRace5: number
-    pointsRace6: number
-    pointsRace7: number
-    pointsRace8: number
-    pointsRace9: number
-    pointsRace10: number
-    totalPoints: number
-    participaciones: number
-    position: number
-}
-
-function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPoints[] {
-    let rows: ICircuitPoints[] = []
+function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData[] {
+    let rows: ICircuitPointsData[] = []
 
     data.pageTables.forEach((pageTable: any) => {
 
@@ -74,7 +105,7 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPoints[] {
                 return
             }
 
-            const newRow:ICircuitPoints = {
+            const newRow:ICircuitPointsData = {
                 dorsal: row[0],
                 fullName: row[1],
                 pointsRace1: row[2],
@@ -98,4 +129,3 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPoints[] {
 
     return rows
 }
-
