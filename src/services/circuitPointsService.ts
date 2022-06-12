@@ -110,16 +110,7 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData
             const newRow:ICircuitPointsData = {
                 dorsal: row[0],
                 fullName: row[1],
-                pointsRace1: row[2],
-                pointsRace2: row[3],
-                pointsRace3: row[4],
-                pointsRace4: row[5],
-                pointsRace5: row[6],
-                pointsRace6: row[7],
-                pointsRace7: row[8],
-                pointsRace8: row[9],
-                pointsRace9: row[10],
-                pointsRace10: row[11],
+                points: [ row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11] ],
                 totalPoints: row[12],
                 participaciones: row[13],
                 position: row[14]

@@ -9,6 +9,7 @@ import seasonRoute from './routes/season'
 import leaguesRoute from './routes/league'
 import bibNumberRoute from './routes/bibNumbers'
 import circuitPointsRoute from './routes/circuitPoints'
+import rankingRoute from './routes/rankings'
 
 dotenv.config()
 
@@ -28,7 +29,7 @@ app.use('/api/seasons', seasonRoute)
 app.use('/api/leagues', leaguesRoute)
 app.use('/api/bibNumbers', bibNumberRoute)
 app.use('/api/circuitPoints', circuitPointsRoute)
-
+app.use('/api/rankings', rankingRoute)
 
 app.use(logErrors)
 app.use(errorHandler)

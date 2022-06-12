@@ -13,4 +13,6 @@ router.put('/:id', LeagueController.put)
 
 router.delete('/:id', LeagueController.remove)
 
+router.post('/process/:id', LeagueController.processById)
+
 export default router

@@ -3,16 +3,7 @@ import mongoose from "mongoose"
 export interface ICircuitPointsData {
     dorsal: number
     fullName: string
-    pointsRace1: number
-    pointsRace2: number
-    pointsRace3: number
-    pointsRace4: number
-    pointsRace5: number
-    pointsRace6: number
-    pointsRace7: number
-    pointsRace8: number
-    pointsRace9: number
-    pointsRace10: number
+    points: number[]
     totalPoints: number
     participaciones: number
     position: number

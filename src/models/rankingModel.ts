@@ -1,10 +1,27 @@
 import mongoose from "mongoose"
 
 export interface IRunnerData {
-    name: string
     dorsal: string
-    pos: string
+
+    position: number
+    lastPosition: number
     points: string
+    name: string
+    lastRace: number
+    topFive: boolean
+    participaciones: number
+    bestPosition: number
+    bestPositionCount: number
+    textBestPosition: string
+    pointCircuit: number
+    positionGeneralCircuit: number
+    lastPositionGeneralCircuit: number
+    lastPositionCategoryCircuit: number
+    bestPace: string
+    bestPositionCategotyCircuit: number
+    texBestPositionCategotyCircuit: string
+
+    pointsCurrentRace: number
 }
 
 export interface IRanking {
@@ -53,9 +70,34 @@ rankingSchema.statics.build = (attr: IRanking) => {
 
 const Ranking = mongoose.model<RankingDoc, rankingModelinterface>('Rankings', rankingSchema)
 
+
+export interface ISummaryRunnerData {
+    dorsal: string
+
+    position: number
+    lastPosition: number
+    points: string
+    name: string
+    lastRace: number
+    topFive: boolean
+    participaciones: number
+    bestPosition: number
+    bestPositionCount: number
+    textBestPosition: string
+    pointCircuit: number
+    positionGeneralCircuit: number
+    lastPositionGeneralCircuit: number
+    lastPositionCategoryCircuit: number
+    bestPace: string
+    bestPositionCategotyCircuit: number
+    texBestPositionCategotyCircuit: number
+
+    pointsCurrentRace: number
+}
+
 export interface ISummaryRanking {
     leagueId: string
-    data: IRunnerData[]
+    data: ISummaryRunnerData[]
 }
 
 interface summaryRankingModelinterface extends mongoose.Model<SummaryRankingDoc> {
@@ -64,7 +106,7 @@ interface summaryRankingModelinterface extends mongoose.Model<SummaryRankingDoc>
 
 export interface SummaryRankingDoc extends mongoose.Document {
     leagueId: string
-    data: IRunnerData[]
+    data: ISummaryRunnerData[]
 }
 
 const summaryRankingSchema = new mongoose.Schema({
