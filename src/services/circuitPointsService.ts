@@ -5,7 +5,7 @@ import * as requetsUtils from '../utils/requestsUtils'
 import { join } from 'path';
 import { CircuitPoints, CircuitPointsDoc, ICircuitPoints, ICircuitPointsData } from '../models/circuitPointsModel';
 
-var crypto = require("crypto");
+import * as crypto from 'crypto';
 
 export async function getAll(): Promise<(CircuitPointsDoc & { _id: any })[]>  {
     const documents = await CircuitPoints.find({})
@@ -70,10 +70,10 @@ export async function buildDocument(value: ICircuitPoints): Promise<CircuitPoint
 }
 
 async function getDatabyCircuitPoints(circuitPointUrl: string) {
-    let url: string = circuitPointUrl;
+    const url: string = circuitPointUrl;
 
     try {
-        var filename = crypto.randomBytes(20).toString('hex') + ".pdf"
+        const filename = crypto.randomBytes(20).toString('hex') + ".pdf"
         const fullFileName = join(__dirname, filename)
         
         await requetsUtils.downloadFile(url, fullFileName)
@@ -94,7 +94,8 @@ async function getDatabyCircuitPoints(circuitPointUrl: string) {
 }
 
 function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData[] {
-    let rows: ICircuitPointsData[] = []
+    let rows: ICircuitPointsData[] = [];
+    rows = []
 
     data.pageTables.forEach((pageTable: any) => {
 

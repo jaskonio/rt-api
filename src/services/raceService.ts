@@ -66,7 +66,7 @@ export async function getRankingsDatabyRace(url: string): Promise<IRankingsSport
 
 export async function saveRankingsData(collection_name:string, data: any[]) {
     try {
-        let rankingDoc = mongooseUtils.createModelForName(collection_name)
+        const rankingDoc = mongooseUtils.createModelForName(collection_name)
 
         await rankingDoc.insertMany(data)
     } catch (error: any) {

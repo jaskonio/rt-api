@@ -14,6 +14,7 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
     console.log(dorsalesDocument[0].bibNumner)
   
     let dorsales = [] as number[];
+    dorsales = []
     
     dorsalesDocument.forEach( (BibNumberDoc: BibNumberDoc & {_id: any;}) => {
         dorsales.push(BibNumberDoc.bibNumner)
@@ -28,6 +29,7 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
 
     // points list filtered by dorsales id 
     let pointsCircuit = [] as ICircuitPointsData[]
+    pointsCircuit = []
 
     if(pointsCircuitDocument.data == null) {
         throw ""
@@ -42,15 +44,17 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
     // order race by position
     // todo
     
-    let indexRaceProccess: number = 0
+    let indexRaceProccess = 0
+    indexRaceProccess = 0
 
     let historyRunnersData: IRunnerData[] = []
+    historyRunnersData = []
 
     racesProcessedDocument.forEach( (raceDocument: RaceProcessedDoc & {_id: any;}) => {
 
         const runnersData: IRunnerData[] = []
 
-        let indexPosition: number = 1
+        let indexPosition = 1
 
         raceDocument.data.forEach( (rankingsSportmaniacs: IRankingsSportmaniacs) => {
             const runnerData: IRunnerData = {
@@ -135,7 +139,7 @@ function builPoints(dorsal: string, currentPoint: number, historyRunnersData: IR
 function buildLastRace(_dorsal: string, _racesProcessedDocument: (RaceProcessedDoc & { _id: any; })[], indexRaceProccess: number): number {
     console.log("buildLastRace")
 
-    let lastRace = 0
+    const lastRace = 0
 
     if (indexRaceProccess == 0) {
         return lastRace
@@ -148,6 +152,8 @@ function buildtParticipaciones(_dorsal: string, _racesProcessedDocument: (RacePr
     console.log("buildtParticipaciones")
 
     let participaciones = 0
+    participaciones = 0
+
 
     if (indexRaceProccess == 0) {
         return participaciones
@@ -191,7 +197,7 @@ function buildbestPositionCount(runnersData: IRunnerData[]): number {
     bestPosition = bestPosition.sort().reverse()
 
     const firstBestPosition = bestPosition[0]
-    let countBestPosition: number = 0
+    let countBestPosition = 0
 
     bestPosition.forEach( (element: number )=> {
         if (firstBestPosition === element) {
@@ -218,7 +224,7 @@ function buildTextBestPosition(bestPosition: number, count: number): string {
 function buildPointCircuit(dorsal: string, circuitPointsData: ICircuitPointsData[], indexRaceProccess: number): number {
     console.log("buildPointCircuit")
 
-    let point: number = 0
+    let point = 0
     
     circuitPointsData.forEach( (circuitPointData:ICircuitPointsData) => {
         if (circuitPointData.dorsal == Number(dorsal)) {
@@ -269,12 +275,14 @@ function buildBestPace(dorsal: string, racesProcessedDocument: (RaceProcessedDoc
     const indexRange = range(indexRaceProccess + 1 )
 
     let copyRacesProcessedDocument:(RaceProcessedDoc & { _id: any; })[] = [];
+    copyRacesProcessedDocument = []
 
     indexRange.forEach((_element, index, _array) => {
         copyRacesProcessedDocument.push(racesProcessedDocument[index])
     });
 
     let paces: string[] = [];
+    paces = []
 
     copyRacesProcessedDocument.forEach( (raceProcessedDoc: (RaceProcessedDoc & {_id: any;})) => {
         raceProcessedDoc.data.forEach( element => {

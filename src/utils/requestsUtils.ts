@@ -1,11 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import Fs from 'fs'
 import * as stream from 'stream';
 import { promisify } from 'util';
 
-export async function getData(url: string, options?: any) {
+export async function getData(url: string, options?: AxiosRequestConfig) {
     try {
-        let { data, status }  = await axios.get(url, options)
+        const { data, status }  = await axios.get(url, options)
 
         console.log('response status is: ', status);
 
@@ -24,7 +24,7 @@ export async function getData(url: string, options?: any) {
 
 const finished = promisify(stream.finished);
 
-export async function downloadFile(url: string, outputLocationPath: string): Promise<any> {
+export async function downloadFile(url: string, outputLocationPath: string): Promise<void> {
   const writer = Fs.createWriteStream(outputLocationPath);
 
   return axios.get(url, {responseType: 'stream'}).then(response => {
