@@ -1,4 +1,4 @@
-const pdf_table_extractor_run = require('pdf-table-extractor');
+const pdf_table_extractor_run = require('pdf-table-extractor')
  
 export interface IPDFDataPageTableModel {
     page: number
@@ -17,10 +17,10 @@ export interface IPDFDataModel {
 
 export async function convertPdfTOJson(pdf_file: string): Promise<IPDFDataModel> {
     
-    return new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
     
-        pdf_table_extractor_run(pdf_file, 
-            (result: IPDFDataModel) => resolve(result),
-            (err: any) => reject(err))
-    })
+		pdf_table_extractor_run(pdf_file, 
+			(result: IPDFDataModel) => resolve(result),
+			(err: any) => reject(err))
+	})
 }

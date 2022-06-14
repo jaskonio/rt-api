@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface IRace {
     name: string
@@ -21,31 +21,31 @@ export interface RaceDoc extends mongoose.Document {
 }
 
 const raceSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    processed: {
-        type: Boolean,
-        default: false,
-        required: false
-    },
-    celebrateDay: {
-        type: String,
-        required: true
-    },
-    url: {
-        type: String,
-        required: true
-    },
-    seasonId: {
-        type: String,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true
+	},
+	processed: {
+		type: Boolean,
+		default: false,
+		required: false
+	},
+	celebrateDay: {
+		type: String,
+		required: true
+	},
+	url: {
+		type: String,
+		required: true
+	},
+	seasonId: {
+		type: String,
+		required: true
+	}
 })
 
 raceSchema.statics.build = (attr: IRace) => {
-    return new Race(attr)
+	return new Race(attr)
 }
 
 const Race = mongoose.model<RaceDoc, raceModelinterface>('Races', raceSchema)

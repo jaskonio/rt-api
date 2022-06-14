@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface Irunner {
     name: string
@@ -17,22 +17,22 @@ export interface runnerDoc extends mongoose.Document {
 }
 
 const runnerSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    last_name: {
-        type: String,
-        required: true
-    },
-    photo: {
-        type: String,
-        required: false
-    }
+	name: {
+		type: String,
+		required: true
+	},
+	last_name: {
+		type: String,
+		required: true
+	},
+	photo: {
+		type: String,
+		required: false
+	}
 })
 
 runnerSchema.statics.build = (attr: Irunner) => {
-    return new Runner(attr)
+	return new Runner(attr)
 }
 
 const Runner = mongoose.model<runnerDoc, runnerModelinterface>('Runner', runnerSchema)

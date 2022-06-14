@@ -6,117 +6,117 @@ import { IRankingsSportmaniacs, IResponseSportmaniacs } from '../models/sportman
 import { RaceProcessed } from '../models/raceProcessedModel'
 
 export async function getAll() {
-    const races = await Race.find({})
+	const races = await Race.find({})
 
-    return races
+	return races
 }
 
 export async function getById(id: string) {
-    const race = await Race.findById(id)
+	const race = await Race.findById(id)
 
-    return race
+	return race
 }
 
 export async function save(document: IRace) {
-    const newDocument = Race.build(document)
+	const newDocument = Race.build(document)
 
-    await newDocument.save()
+	await newDocument.save()
 
-    return newDocument
+	return newDocument
 }
 
 export async function update(id: string, newDocument: IRace): Promise<(RaceDoc & {_id: any;}) | null> {
-    const currentDocument = await getById(id)
+	const currentDocument = await getById(id)
 
-    if (currentDocument === null) {
-        throw { message: "no data exist for this id" }
-    }
+	if (currentDocument === null) {
+		throw { message: 'no data exist for this id' }
+	}
 
-    await currentDocument.updateOne(newDocument)
+	await currentDocument.updateOne(newDocument)
 
-    const updatedDocument = await getById(id)
+	const updatedDocument = await getById(id)
 
-    return updatedDocument
+	return updatedDocument
 }
 
 export async function remove(id: string) {
-    await Race.deleteOne({id: id})
+	await Race.deleteOne({id: id})
 }
 
 export async function getRankingsDatabyRace(url: string): Promise<IRankingsSportmaniacs[]> {
-    try {
-        const data = await axios.get<IResponseSportmaniacs>(url).then( response => {
-            return response.data
-        })
+	try {
+		const data = await axios.get<IResponseSportmaniacs>(url).then( response => {
+			return response.data
+		})
 
-        const rankings = data.data.Rankings
+		const rankings = data.data.Rankings
 
-        return rankings
+		return rankings
 
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.log('error message: ', error.message);
-            throw error.message;
-          } else {
-            console.log('unexpected error: ', error);
-            throw 'An unexpected error occurred';
-          }
-    }
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			console.log('error message: ', error.message)
+			throw error.message
+		} else {
+			console.log('unexpected error: ', error)
+			throw 'An unexpected error occurred'
+		}
+	}
 }
 
 export async function saveRankingsData(collection_name:string, data: any[]) {
-    try {
-        const rankingDoc = mongooseUtils.createModelForName(collection_name)
+	try {
+		const rankingDoc = mongooseUtils.createModelForName(collection_name)
 
-        await rankingDoc.insertMany(data)
-    } catch (error: any) {
-        console.log('unexpected error: ', error)
-        throw 'An unexpected error occurred: '+ error?.message
-    }
+		await rankingDoc.insertMany(data)
+	} catch (error: any) {
+		console.log('unexpected error: ', error)
+		throw 'An unexpected error occurred: '+ error?.message
+	}
 }
 
 export async function saveRowData(race: RaceDoc): Promise<IRankingsSportmaniacs[]> {
-    try {
-        const data = await getRankingsDatabyRace(race.url);
+	try {
+		const data = await getRankingsDatabyRace(race.url)
 
-        const raceRowDocument = await RaceRow.findOne({ raceId: race.id})
+		const raceRowDocument = await RaceRow.findOne({ raceId: race.id})
 
-        if (raceRowDocument == null) {
-            const raceRowDocument = await RaceRow.build({raceId: race._id, data: data})
-            await raceRowDocument.save()
-        }
-        else{
-            raceRowDocument.updateOne({data: data})
-        }
+		if (raceRowDocument == null) {
+			const raceRowDocument = await RaceRow.build({raceId: race._id, data: data})
+			await raceRowDocument.save()
+		}
+		else{
+			raceRowDocument.updateOne({data: data})
+		}
 
-        return data
-    } catch (error: any) {
-        console.log('unexpected error: ', error)
-        throw 'An unexpected error occurred: '+ error?.message
-    }
+		return data
+	} catch (error: any) {
+		console.log('unexpected error: ', error)
+		throw 'An unexpected error occurred: '+ error?.message
+	}
 }
 export function getProcessedData(rows: IRankingsSportmaniacs[]): IRankingsSportmaniacs[] {
-    const clubName = "REDOLAT TEAM"
+	const clubName = 'REDOLAT TEAM'
     
-    const filteredRows = rows.filter( function(row: IRankingsSportmaniacs){
-        return row.club.toLowerCase() == clubName.toLowerCase()
-    });
+	const filteredRows = rows.filter( function(row: IRankingsSportmaniacs){
+		return row.club.toLowerCase() == clubName.toLowerCase()
+	})
 
-    return filteredRows
+	return filteredRows
 }
 
 export async function saveProcessedData(race: RaceDoc, rows: IRankingsSportmaniacs[]): Promise<IRankingsSportmaniacs[]> {
-    const data = getProcessedData(rows)
+	const data = getProcessedData(rows)
 
-    const raceProcessedDocument = await RaceProcessed.findOne({ raceId: race.id})
+	const raceProcessedDocument = await RaceProcessed.findOne({ raceId: race.id})
 
-    if (raceProcessedDocument == null) {
-        const raceProcessedDocument = await RaceProcessed.build({raceId: race._id, data: data})
-        await raceProcessedDocument.save()
-    }
-    else{
-        raceProcessedDocument.updateOne({data: data})
-    }
+	if (raceProcessedDocument == null) {
+		const raceProcessedDocument = await RaceProcessed.build({raceId: race._id, data: data})
+		await raceProcessedDocument.save()
+	}
+	else{
+		raceProcessedDocument.updateOne({data: data})
+	}
 
-    return data
+	return data
 }
