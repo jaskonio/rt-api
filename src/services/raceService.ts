@@ -1,5 +1,4 @@
 import axios from 'axios'
-import * as mongooseUtils from '../utils/mongoose'
 import { IRace, Race, RaceDoc }  from '../models/raceModel'
 import { RaceRow } from '../models/raceRowModel'
 import { IRankingsSportmaniacs, IResponseSportmaniacs } from '../models/sportmaniacsModel'
@@ -25,7 +24,7 @@ export async function save(document: IRace) {
 	return newDocument
 }
 
-export async function update(id: string, newDocument: IRace): Promise<(RaceDoc & {_id: any;}) | null> {
+export async function update(id: string, newDocument: IRace): Promise<(RaceDoc & {_id: string;}) | null> {
 	const currentDocument = await getById(id)
 
 	if (currentDocument === null) {
@@ -64,17 +63,6 @@ export async function getRankingsDatabyRace(url: string): Promise<IRankingsSport
 	}
 }
 
-export async function saveRankingsData(collection_name:string, data: any[]) {
-	try {
-		const rankingDoc = mongooseUtils.createModelForName(collection_name)
-
-		await rankingDoc.insertMany(data)
-	} catch (error: any) {
-		console.log('unexpected error: ', error)
-		throw 'An unexpected error occurred: '+ error?.message
-	}
-}
-
 export async function saveRowData(race: RaceDoc): Promise<IRankingsSportmaniacs[]> {
 	try {
 		const data = await getRankingsDatabyRace(race.url)
@@ -90,11 +78,16 @@ export async function saveRowData(race: RaceDoc): Promise<IRankingsSportmaniacs[
 		}
 
 		return data
-	} catch (error: any) {
-		console.log('unexpected error: ', error)
-		throw 'An unexpected error occurred: '+ error?.message
+	} catch (err: unknown) {
+		if (err instanceof Error) {
+			console.log('unexpected error: ', err)
+			throw 'An unexpected error occurred: '+ err?.message
+		}
+
+		throw 'An unexpected error occurred: ' + err
 	}
 }
+
 export function getProcessedData(rows: IRankingsSportmaniacs[]): IRankingsSportmaniacs[] {
 	const clubName = 'REDOLAT TEAM'
     

@@ -1,12 +1,12 @@
 import { BibNumber, BibNumberDoc, IBibNumber }  from '../models/bibNumberModel'
 
-export async function getAll(): Promise<(BibNumberDoc & { _id: any })[]>  {
+export async function getAll(): Promise<(BibNumberDoc & { _id: string })[]>  {
 	const bibNumber = await BibNumber.find({})
 
 	return bibNumber
 }
 
-export async function getById(id: string): Promise<(BibNumberDoc & { _id: any;}) | null>  {
+export async function getById(id: string): Promise<(BibNumberDoc & { _id: string;}) | null>  {
 	const bibNumber = await BibNumber.findById(id)
 
 	if (bibNumber === null) {
@@ -22,7 +22,7 @@ export async function save(doc:BibNumberDoc ): Promise<void> {
 	await newBibNumber.save()
 }
 
-export async function update(id: string, doc: IBibNumber): Promise<(BibNumberDoc & {_id: any;}) | null> {
+export async function update(id: string, doc: IBibNumber): Promise<(BibNumberDoc & {_id: string;}) | null> {
 	const bibNumber = await getById(id)
 
 	if (bibNumber === null) {

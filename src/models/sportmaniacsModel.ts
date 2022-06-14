@@ -3,13 +3,13 @@ export interface IResponseSportmaniacs {
 }
 
 export interface ISportmaniacsData {
-    Averages: any
-    Categories: any
-    Event: any
-    Race: any
+    Averages: unknown
+    Categories: unknown
+    Event: unknown
+    Race: unknown
     Rankings: IRankingsSportmaniacs[]
-    Splits: any
-    Summary: any
+    Splits: unknown
+    Summary: unknown
     cached: boolean
     created: number
 }

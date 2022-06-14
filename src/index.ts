@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 
 import mongoose from'mongoose'
 import * as dotenv from 'dotenv'
@@ -34,14 +34,14 @@ app.use('/api/rankings', rankingRoute)
 app.use(logErrors)
 app.use(errorHandler)
 
-function logErrors(err: any, _req: Request, _res: Response, next: any) {
+function logErrors(err: Error , _req: Request, _res: Response, next: NextFunction) {
 	console.error('logErrors')
 	console.error(err.stack)
 
 	next(err)
 }
 
-function errorHandler(err: any, _req: any, res: any, _next: any) {
+function errorHandler(err: Error , _req: Request, res: Response) {
 	console.error('errorHandler')
 
 	res.status(500).send({ error: err })

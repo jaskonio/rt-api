@@ -6,14 +6,15 @@ import { join } from 'path'
 import { CircuitPoints, CircuitPointsDoc, ICircuitPoints, ICircuitPointsData } from '../models/circuitPointsModel'
 
 import * as crypto from 'crypto'
+import { IPDFDataPageTableModel } from '../utils/pdfUtils'
 
-export async function getAll(): Promise<(CircuitPointsDoc & { _id: any })[]>  {
+export async function getAll(): Promise<(CircuitPointsDoc & { _id: string })[]>  {
 	const documents = await CircuitPoints.find({})
 
 	return documents
 }
 
-export async function getById(id: string): Promise<(CircuitPointsDoc & { _id: any;}) | null>  {
+export async function getById(id: string): Promise<(CircuitPointsDoc & { _id: string;}) | null>  {
 	const document = await CircuitPoints.findById(id)
 
 	if (document === null) {
@@ -31,7 +32,7 @@ export async function save(doc: ICircuitPoints): Promise<CircuitPointsDoc> {
 	return newDocument
 }
 
-export async function update(id: string, newDocument: ICircuitPoints): Promise<(CircuitPointsDoc & {_id: any;}) | null> {
+export async function update(id: string, newDocument: ICircuitPoints): Promise<(CircuitPointsDoc & {_id: string;}) | null> {
 	const currentDocument = await getById(id)
 
 	if (currentDocument === null) {
@@ -97,9 +98,9 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData
 	let rows: ICircuitPointsData[] = []
 	rows = []
 
-	data.pageTables.forEach((pageTable: any) => {
+	data.pageTables.forEach((pageTable: IPDFDataPageTableModel) => {
 
-		pageTable.tables.forEach((row:any, index:number, _array:any) => {
+		pageTable.tables.forEach((row: any, index: number, _array: any[]) => {
 			if (row[0] === '') {
 				return
 			}

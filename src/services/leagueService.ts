@@ -4,9 +4,9 @@ import { RaceProcessedDoc } from '../models/raceProcessedModel'
 import { IRunnerData } from '../models/rankingModel'
 import { IRankingsSportmaniacs } from '../models/sportmaniacsModel'
 
-export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_id: any;})[], 
-	pointsCircuitDocument: CircuitPointsDoc & {_id: any;},
-	dorsalesDocument: (BibNumberDoc & {_id: any;})[]): Promise<IRunnerData[]> {
+export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_id: string;})[], 
+	pointsCircuitDocument: CircuitPointsDoc & {_id: string;},
+	dorsalesDocument: (BibNumberDoc & {_id: string;})[]): Promise<IRunnerData[]> {
 	console.log(processData)
     
 	console.log(racesProcessedDocument)
@@ -16,12 +16,12 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
 	let dorsales = [] as number[]
 	dorsales = []
     
-	dorsalesDocument.forEach( (BibNumberDoc: BibNumberDoc & {_id: any;}) => {
+	dorsalesDocument.forEach( (BibNumberDoc: BibNumberDoc & {_id: string;}) => {
 		dorsales.push(BibNumberDoc.bibNumner)
 	})
 
 	// races filtered by dorsales id 
-	racesProcessedDocument.forEach( (raceDocument: RaceProcessedDoc & {_id: any;}) => {
+	racesProcessedDocument.forEach( (raceDocument: RaceProcessedDoc & {_id: string;}) => {
 		raceDocument.data = raceDocument.data.filter( (rankingsSportmaniacs: IRankingsSportmaniacs) => {
 			return dorsales.includes(+rankingsSportmaniacs.dorsal)
 		})
@@ -50,7 +50,7 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
 	let historyRunnersData: IRunnerData[] = []
 	historyRunnersData = []
 
-	racesProcessedDocument.forEach( (raceDocument: RaceProcessedDoc & {_id: any;}) => {
+	racesProcessedDocument.forEach( (raceDocument: RaceProcessedDoc & {_id: string;}) => {
 
 		const runnersData: IRunnerData[] = []
 
@@ -93,7 +93,7 @@ export async function processData(racesProcessedDocument: (RaceProcessedDoc & {_
 	return historyRunnersData
 }
 
-function buildLastPosition(dorsal: string, racesProcessedDocument: (RaceProcessedDoc & { _id: any; })[], indexRaceProccess: number): number {
+function buildLastPosition(dorsal: string, racesProcessedDocument: (RaceProcessedDoc & { _id: string; })[], indexRaceProccess: number): number {
 	let lastPosition = 0
 	if (indexRaceProccess === 0) {
 		racesProcessedDocument.forEach(element => {

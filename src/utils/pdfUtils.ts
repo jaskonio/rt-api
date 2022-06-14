@@ -1,10 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const pdf_table_extractor_run = require('pdf-table-extractor')
  
 export interface IPDFDataPageTableModel {
     page: number
-    tables: any[]  
-    merges: any
-    merge_alias: any
+    tables: unknown[]  
+    merges: unknown
+    merge_alias: unknown
     width: number
     height: number
 }
@@ -21,6 +22,6 @@ export async function convertPdfTOJson(pdf_file: string): Promise<IPDFDataModel>
     
 		pdf_table_extractor_run(pdf_file, 
 			(result: IPDFDataModel) => resolve(result),
-			(err: any) => reject(err))
+			(err: Error) => reject(err))
 	})
 }
