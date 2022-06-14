@@ -1,5 +1,5 @@
-import mongoose from "mongoose"
-import { IRankingsSportmaniacs } from "./sportmaniacsModel"
+import mongoose from 'mongoose'
+import { IRankingsSportmaniacs } from './sportmaniacsModel'
 
 export interface IRaceRow {
     raceId: string
@@ -16,18 +16,18 @@ export interface RaceRowDoc extends mongoose.Document {
 }
 
 const raceRowSchema = new mongoose.Schema({
-    raceId: {
-        type: String,
-        required: true
-    },
-    data: {
-        type: mongoose.SchemaTypes.Mixed,
-        required: false
-    }
+	raceId: {
+		type: String,
+		required: true
+	},
+	data: {
+		type: mongoose.SchemaTypes.Mixed,
+		required: false
+	}
 })
 
 raceRowSchema.statics.build = (attr: IRaceRow) => {
-    return new RaceRow(attr)
+	return new RaceRow(attr)
 }
 
 const RaceRow = mongoose.model<RaceRowDoc, raceRowModelinterface>('RaceRows', raceRowSchema)

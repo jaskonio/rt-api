@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface Iseason {
     name: string
@@ -13,14 +13,14 @@ export interface seasonDoc extends mongoose.Document {
 }
 
 const seasonSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true
+	}
 })
 
 seasonSchema.statics.build = (attr: Iseason) => {
-    return new Season(attr)
+	return new Season(attr)
 }
 
 const Season = mongoose.model<seasonDoc, seasonModelinterface>('Season', seasonSchema)

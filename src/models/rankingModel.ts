@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface IRunnerData {
     dorsal: string
@@ -45,27 +45,27 @@ export interface RankingDoc extends mongoose.Document {
 }
 
 const rankingSchema = new mongoose.Schema({
-    data: {
-        type: mongoose.SchemaTypes.Mixed,
-        required: true
-    },
-    processedPoints: {
-        type: Boolean,
-        default: false,
-        required: false
-    },
-    raceId: {
-        type: String,
-        required: true
-    },
-    leagueId: {
-        type: String,
-        required: true
-    }
+	data: {
+		type: mongoose.SchemaTypes.Mixed,
+		required: true
+	},
+	processedPoints: {
+		type: Boolean,
+		default: false,
+		required: false
+	},
+	raceId: {
+		type: String,
+		required: true
+	},
+	leagueId: {
+		type: String,
+		required: true
+	}
 })
 
 rankingSchema.statics.build = (attr: IRanking) => {
-    return new Ranking(attr)
+	return new Ranking(attr)
 }
 
 const Ranking = mongoose.model<RankingDoc, rankingModelinterface>('Rankings', rankingSchema)
@@ -110,18 +110,18 @@ export interface SummaryRankingDoc extends mongoose.Document {
 }
 
 const summaryRankingSchema = new mongoose.Schema({
-    leagueId: {
-        type: String,
-        required: true
-    },
-    data: {
-        type: mongoose.SchemaTypes.Mixed,
-        required: true
-    }
+	leagueId: {
+		type: String,
+		required: true
+	},
+	data: {
+		type: mongoose.SchemaTypes.Mixed,
+		required: true
+	}
 })
 
 summaryRankingSchema.statics.build = (attr: IRanking) => {
-    return new Ranking(attr)
+	return new Ranking(attr)
 }
 
 const SummaryRanking = mongoose.model<SummaryRankingDoc, summaryRankingModelinterface>('SummaryRankings', rankingSchema)

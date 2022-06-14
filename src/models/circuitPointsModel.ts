@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface ICircuitPointsData {
     dorsal: number
@@ -28,22 +28,22 @@ export interface CircuitPointsDoc extends mongoose.Document {
 }
 
 const circuitPointsSchema = new mongoose.Schema({
-    url: {
-        type: String,
-        required: true
-    },
-    data: {
-        type: mongoose.SchemaTypes.Mixed,
-        required: false
-    },
-    seasonId: {
-        type: String,
-        required: true
-    }
+	url: {
+		type: String,
+		required: true
+	},
+	data: {
+		type: mongoose.SchemaTypes.Mixed,
+		required: false
+	},
+	seasonId: {
+		type: String,
+		required: true
+	}
 })
 
 circuitPointsSchema.statics.build = (attr: ICircuitPoints) => {
-    return new CircuitPoints(attr)
+	return new CircuitPoints(attr)
 }
 
 const CircuitPoints = mongoose.model<CircuitPointsDoc, circuitPointsModelinterface>('CircuitPoints', circuitPointsSchema)

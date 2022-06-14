@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface IBibNumber {
     bibNumner: number
@@ -17,22 +17,22 @@ export interface BibNumberDoc extends mongoose.Document {
 }
 
 const bibNumberSchema = new mongoose.Schema({
-    bibNumner: {
-        type: Number,
-        required: true
-    },
-    runnerId: {
-        type: String,
-        required: true
-    },
-    disqualifiedRaceIds: {
-        type: [String],
-        required: false
-    }
+	bibNumner: {
+		type: Number,
+		required: true
+	},
+	runnerId: {
+		type: String,
+		required: true
+	},
+	disqualifiedRaceIds: {
+		type: [String],
+		required: false
+	}
 })
 
 bibNumberSchema.statics.build = (attr: IBibNumber) => {
-    return new BibNumber(attr)
+	return new BibNumber(attr)
 }
 
 const BibNumber = mongoose.model<BibNumberDoc, bibNumberModelinterface>('BibNumbers', bibNumberSchema)

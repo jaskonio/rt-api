@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 export interface ILeague {
     seasonId: string
@@ -17,22 +17,22 @@ export interface LeagueDoc extends mongoose.Document {
 }
 
 const leagueSchema = new mongoose.Schema({
-    seasonId: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    bibNumberIds: {
-        type: [String],
-        required: false
-    }
+	seasonId: {
+		type: String,
+		required: true
+	},
+	name: {
+		type: String,
+		required: true
+	},
+	bibNumberIds: {
+		type: [String],
+		required: false
+	}
 })
 
 leagueSchema.statics.build = (attr: ILeague) => {
-    return new League(attr)
+	return new League(attr)
 }
 
 const League = mongoose.model<LeagueDoc, leagueModelinterface>('Leagues', leagueSchema)

@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as RankingControllers  from '../controllers/rankingsControllers'
 
 const router = express.Router()

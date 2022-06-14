@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as RunnerController from '../controllers/runnerController'
 
 const router = express.Router()

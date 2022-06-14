@@ -1,121 +1,121 @@
-import { Request, Response }  from "express"
-import mongoose from "mongoose"
+import { Request, Response }  from 'express'
+import mongoose from 'mongoose'
 import { Race }  from '../models/raceModel'
 import * as RaceService from '../services/raceService'
 
 export async function get(_req: Request, res: Response) {
-    console.log('Get all')
+	console.log('Get all')
 
-    try{
-        const races = await RaceService.getAll()
+	try{
+		const races = await RaceService.getAll()
     
-        res.send(races)
-    } catch (e) {
-        res.status(404).send(e)
-    }
+		res.send(races)
+	} catch (e) {
+		res.status(404).send(e)
+	}
 }
 
 export async function getById(req: Request, res: Response) {
-    console.log('Get by race')
+	console.log('Get by race')
     
-    const id = req.params.id
+	const id = req.params.id
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        res.status(404).send({ message: "Please provide correct id" })
-        return
-    }
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		res.status(404).send({ message: 'Please provide correct id' })
+		return
+	}
 
-    const race = await RaceService.getById(id)
+	const race = await RaceService.getById(id)
 
-    res.send(race)
+	res.send(race)
 }
 
 export async function post(req: Request, res: Response) {
-    try{
-        console.log('Save race')
+	try{
+		console.log('Save race')
 
-        const { processed, celebrateDay, name, url, seasonId } = req.body
+		const { processed, celebrateDay, name, url, seasonId } = req.body
 
-        const newrace = RaceService.save({ processed, celebrateDay, name, url, seasonId })
+		const newrace = RaceService.save({ processed, celebrateDay, name, url, seasonId })
 
-        res.json(newrace)
-    } catch (e) {
-        res.status(404).send(e)
-    }
+		res.json(newrace)
+	} catch (e) {
+		res.status(404).send(e)
+	}
 }
 
 export async function put(req: Request, res: Response) {
-    console.log('update race')
+	console.log('update race')
 
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(404).send({ message: 'Please provide correct id' })
+			return
+		}
         
-        const document = await RaceService.getById(id)
+		const document = await RaceService.getById(id)
         
-        if (document == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (document == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const { name, processed, celebrateDay, url, seasonId } = req.body
+		const { name, processed, celebrateDay, url, seasonId } = req.body
 
-        await document.update({ name, processed, celebrateDay, url, seasonId })
+		await document.update({ name, processed, celebrateDay, url, seasonId })
 
-        const updatedDocument = await RaceService.getById(id)
+		const updatedDocument = await RaceService.getById(id)
         
-        res.send(updatedDocument)
-    } catch (e){
-        console.log("[ERROR]" + e)
+		res.send(updatedDocument)
+	} catch (e){
+		console.log('[ERROR]' + e)
 
-        res.status(500).send(e)
-    }
+		res.status(500).send(e)
+	}
 }
 
 export async function remove(req: Request, res: Response) {
-    console.log("Delete League")
+	console.log('Delete League')
 
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        await RaceService.remove(id)
+		await RaceService.remove(id)
 
-        res.status(200).send()
-    } catch (e){
-        console.log("[ERROR]" + e)
-        res.status(500).send(e)
-    }
+		res.status(200).send()
+	} catch (e){
+		console.log('[ERROR]' + e)
+		res.status(500).send(e)
+	}
 }
 
 export async function processById(req: Request, res: Response) {
-    const id = req.params.id
+	const id = req.params.id
 
-    try {
+	try {
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(404).send({ message: 'Please provide correct id' })
+			return
+		}
     
-        const race = await Race.findById(id)
+		const race = await Race.findById(id)
         
-        if (race == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (race == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const data = await RaceService.saveRowData(race);
+		const data = await RaceService.saveRowData(race)
 
-        await RaceService.saveProcessedData(race, data)
+		await RaceService.saveProcessedData(race, data)
 
-        res.status(201).send()
+		res.status(201).send()
 
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ error});
-    }
+	} catch (error) {
+		console.log(error)
+		res.status(500).json({ error})
+	}
 }

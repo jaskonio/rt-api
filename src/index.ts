@@ -34,7 +34,7 @@ app.use('/api/rankings', rankingRoute)
 app.use(logErrors)
 app.use(errorHandler)
 
-function logErrors(err: any, _req: any, _res: any, next: any) {
+function logErrors(err: any, _req: Request, _res: Response, next: any) {
 	console.error('logErrors')
 	console.error(err.stack)
 

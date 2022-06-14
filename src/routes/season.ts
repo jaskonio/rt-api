@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as SeasonController from '../controllers/seasonController'
 
 const router = express.Router()

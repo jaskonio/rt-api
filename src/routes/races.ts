@@ -1,5 +1,5 @@
-import express from "express"
-import * as RaceController from "../controllers/raceController"
+import express from 'express'
+import * as RaceController from '../controllers/raceController'
 
 const router = express.Router()
 

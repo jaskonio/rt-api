@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as LeagueController  from '../controllers/leagueController'
 
 const router = express.Router()

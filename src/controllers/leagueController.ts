@@ -1,164 +1,164 @@
-import { Request, Response }  from "express"
-import mongoose from "mongoose"
-import { BibNumber } from "../models/bibNumberModel"
-import { CircuitPoints } from "../models/circuitPointsModel"
-import { League } from "../models/leagueModel"
-import { Race } from "../models/raceModel"
-import { RaceProcessed } from "../models/raceProcessedModel"
-import { Ranking } from "../models/rankingModel"
+import { Request, Response }  from 'express'
+import mongoose from 'mongoose'
+import { BibNumber } from '../models/bibNumberModel'
+import { CircuitPoints } from '../models/circuitPointsModel'
+import { League } from '../models/leagueModel'
+import { Race } from '../models/raceModel'
+import { RaceProcessed } from '../models/raceProcessedModel'
+import { Ranking } from '../models/rankingModel'
 import * as LeagueService from '../services/leagueService'
 
 export async function get(_req: Request, res: Response) {
-    console.log("Get All League")
+	console.log('Get All League')
 
-    try {
-        const leagues = await League.find({})
+	try {
+		const leagues = await League.find({})
 
-        res.send(leagues)
-    } catch (e){
-        console.log("[ERROR]" + e)
-        res.status(500).send(e)
-    }
+		res.send(leagues)
+	} catch (e){
+		console.log('[ERROR]' + e)
+		res.status(500).send(e)
+	}
 }
 
 export async function getById(req: Request, res: Response) {
-    console.log("Get By League Id")
+	console.log('Get By League Id')
 
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(404).send({ message: 'Please provide correct id' })
+			return
+		}
 
-        const season = await League.findById(id)
+		const season = await League.findById(id)
 
-        res.send(season)
-    } catch (e){
-        console.log("[ERROR]" + e)
+		res.send(season)
+	} catch (e){
+		console.log('[ERROR]' + e)
 
-        res.status(500).send(e)
-    }
+		res.status(500).send(e)
+	}
 }
 
 export async function post(req: Request, res: Response) {
-    console.log("POST League")
+	console.log('POST League')
 
-    try {
-        const { seasonId, name, bibNumberIds } = req.body
-        const newLeague = League.build({ seasonId, name, bibNumberIds })
+	try {
+		const { seasonId, name, bibNumberIds } = req.body
+		const newLeague = League.build({ seasonId, name, bibNumberIds })
 
-        await newLeague.save()
+		await newLeague.save()
 
-        res.send(newLeague)
-    } catch (e){
-        console.log("[ERROR]" + e)
-        res.status(500).send(e)
-    }
+		res.send(newLeague)
+	} catch (e){
+		console.log('[ERROR]' + e)
+		res.status(500).send(e)
+	}
 }
 
 export async function put(req: Request, res: Response) {
-    console.log("Update League")
+	console.log('Update League')
 
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(404).send({ message: 'Please provide correct id' })
+			return
+		}
         
-        const league = await League.findById(id)
+		const league = await League.findById(id)
         
-        if (league == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (league == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const { name, racesIds, leaguesIds } = req.body
+		const { name, racesIds, leaguesIds } = req.body
 
-        await league.update({ name, racesIds, leaguesIds })
+		await league.update({ name, racesIds, leaguesIds })
 
-        const newLeague = await League.findById(id)
+		const newLeague = await League.findById(id)
         
-        res.send(newLeague)
-    } catch (e){
-        console.log("[ERROR]" + e)
+		res.send(newLeague)
+	} catch (e){
+		console.log('[ERROR]' + e)
 
-        res.status(500).send(e)
-    }
+		res.status(500).send(e)
+	}
 }
 
 export async function remove(req: Request, res: Response) {
-    console.log("Delete League")
+	console.log('Delete League')
 
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        await League.deleteOne({id: id})
+		await League.deleteOne({id: id})
 
-        res.status(200).send()
-    } catch (e){
-        console.log("[ERROR]" + e)
-        res.status(500).send(e)
-    }
+		res.status(200).send()
+	} catch (e){
+		console.log('[ERROR]' + e)
+		res.status(500).send(e)
+	}
 }
 
 export async function processById(req: Request, res: Response) {
-    try {
-        const id = req.params.id
+	try {
+		const id = req.params.id
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(404).send({ message: "Please provide correct id" })
-            return
-        }
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			res.status(404).send({ message: 'Please provide correct id' })
+			return
+		}
     
-        const leagueDoc = await League.findById(id)
+		const leagueDoc = await League.findById(id)
         
-        if (leagueDoc == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (leagueDoc == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const raceDoc = await Race.findOne({ seasonId: leagueDoc.seasonId })
+		const raceDoc = await Race.findOne({ seasonId: leagueDoc.seasonId })
 
-        if (raceDoc == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (raceDoc == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const raceProcesseDocument = await RaceProcessed.find({ raceId: raceDoc.id })
+		const raceProcesseDocument = await RaceProcessed.find({ raceId: raceDoc.id })
 
-        if (raceProcesseDocument == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (raceProcesseDocument == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const pointsCircuitDocument = await CircuitPoints.findOne({ seasonId: leagueDoc.seasonId })
+		const pointsCircuitDocument = await CircuitPoints.findOne({ seasonId: leagueDoc.seasonId })
 
-        if (pointsCircuitDocument == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (pointsCircuitDocument == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const dorsalesDocument = await BibNumber.find({ id: {$in: leagueDoc.bibNumberIds}})
+		const dorsalesDocument = await BibNumber.find({ id: {$in: leagueDoc.bibNumberIds}})
 
-        if (dorsalesDocument == null) {
-            res.status(404).send({ message: "no data exist for this id" })
-            return
-        }
+		if (dorsalesDocument == null) {
+			res.status(404).send({ message: 'no data exist for this id' })
+			return
+		}
 
-        const data = await LeagueService.processData(raceProcesseDocument, pointsCircuitDocument, dorsalesDocument);
+		const data = await LeagueService.processData(raceProcesseDocument, pointsCircuitDocument, dorsalesDocument)
 
-        const rankingDoc = Ranking.build({ data: data, leagueId: leagueDoc.id, raceId: raceProcesseDocument[0].id, processedPoints: true })
+		const rankingDoc = Ranking.build({ data: data, leagueId: leagueDoc.id, raceId: raceProcesseDocument[0].id, processedPoints: true })
 
-        await rankingDoc.save()
+		await rankingDoc.save()
 
-        res.status(201).send()
+		res.status(201).send()
 
-    } catch (error) {
-        console.log(error)
-        res.status(500).json( error );
-    }
+	} catch (error) {
+		console.log(error)
+		res.status(500).json( error )
+	}
 }

@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as CircuitPointController from '../controllers/circuitPointController'
 
 const router = express.Router()

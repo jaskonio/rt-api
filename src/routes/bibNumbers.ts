@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import * as BibNumberController from '../controllers/bibNumberController'
 
 const router = express.Router()
