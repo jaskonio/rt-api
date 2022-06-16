@@ -1,11 +1,11 @@
 import { Request, Response }  from 'express'
 import mongoose from 'mongoose'
-import { Runner }  from '../models/runnerModel'
+import * as RunnerService  from '../services/runnerService'
 
 export async function get(_req: Request, res: Response) {
 	console.log('Get All Runners')
 	try {
-		const runners = await Runner.find({})
+		const runners = await RunnerService.getAll()
 
 		res.send(runners)
 	} catch (e){
@@ -24,7 +24,7 @@ export async function getById(req: Request, res: Response) {
 			return
 		}
 
-		const runner = await Runner.findById(id)
+		const runner = await RunnerService.getById(id)
 
 		res.send(runner)
 	} catch (e){
@@ -36,10 +36,9 @@ export async function getById(req: Request, res: Response) {
 export async function post(req: Request, res: Response) {
 	console.log('POST Runner')
 	try {
-		const { name, last_name, photo } = req.body
-		const newRunner = Runner.build({ name, last_name, photo})
+		const { id, name, last_name, photo } = req.body
+		const newRunner = await RunnerService.save({ id, name, last_name, photo })
 
-		await newRunner.save()
 		res.send(newRunner)
 	} catch (e){
 		console.log('[ERROR]' + e)
@@ -57,7 +56,7 @@ export async function put(req: Request, res: Response) {
 			return
 		}
         
-		const runner = await Runner.findById(id)
+		const runner = await RunnerService.getById(id)
         
 		if (runner == null) {
 			res.status(404).send({ message: 'no data exist for this id' })
@@ -66,9 +65,7 @@ export async function put(req: Request, res: Response) {
 
 		const { name, last_name, photo } = req.body
 
-		await runner.update({ name, last_name, photo })
-
-		const newRunner = await Runner.findById(id)
+		const newRunner = await RunnerService.update({ id, name, last_name, photo })
         
 		res.send(newRunner)
 	} catch (e){
@@ -82,7 +79,7 @@ export async function remove(req: Request, res: Response) {
 	try {
 		const id = req.params.id
 
-		await Runner.deleteOne({id: id})
+		await RunnerService.remove(id)
 
 		res.status(200).send()
 	} catch (e){

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 export interface Irunner {
+	id: string
     name: string
     last_name: string
     photo: string
@@ -34,6 +35,14 @@ const runnerSchema = new mongoose.Schema({
 runnerSchema.statics.build = (attr: Irunner) => {
 	return new Runner(attr)
 }
+
+runnerSchema.set('toJSON', {
+	transform: (_document, returnObject) => {
+		returnObject.id = returnObject._id
+		delete returnObject._id
+		delete returnObject.__v
+	}
+})
 
 const Runner = mongoose.model<runnerDoc, runnerModelinterface>('Runner', runnerSchema)
 
