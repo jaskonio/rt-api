@@ -41,9 +41,7 @@ export async function post(req: Request, res: Response) {
 	try {
 		const { bibNumner, runnerId, disqualifiedRaceIds } = req.body
 
-		const newBibNumber = await BibNumberService.buildDocument({ bibNumner, runnerId, disqualifiedRaceIds })
-
-		await newBibNumber.save()
+		const newBibNumber = await BibNumberService.save({ bibNumner, runnerId, disqualifiedRaceIds })
 
 		res.send(newBibNumber)
 	} catch (e){

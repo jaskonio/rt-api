@@ -1,40 +1,17 @@
-import mongoose from 'mongoose'
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
+import { BibNumber } from './bibNumberModel'
 
-export interface ILeague {
-    seasonId: string
-    name: string
-    bibNumberIds: string[]
+export class League{
+	@prop({ required: true })
+	public seasonId: number
+
+	@prop({ required: true })
+	public name: string
+
+	@prop({ required: false, ref: () => BibNumber })
+	public bibNumberIds!: Ref<BibNumber[]>
 }
 
-interface leagueModelinterface extends mongoose.Model<LeagueDoc> {
-    build(attr: ILeague): LeagueDoc
-}
+const LeagueModel = getModelForClass(League)
 
-export interface LeagueDoc extends mongoose.Document {
-    seasonId: string
-    name: string
-    bibNumberIds: string[]
-}
-
-const leagueSchema = new mongoose.Schema({
-	seasonId: {
-		type: String,
-		required: true
-	},
-	name: {
-		type: String,
-		required: true
-	},
-	bibNumberIds: {
-		type: [String],
-		required: false
-	}
-})
-
-leagueSchema.statics.build = (attr: ILeague) => {
-	return new League(attr)
-}
-
-const League = mongoose.model<LeagueDoc, leagueModelinterface>('Leagues', leagueSchema)
-
-export { League }
+export { LeagueModel }

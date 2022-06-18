@@ -2,16 +2,6 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "start db",
-        "type": "shell",
-        "command": "docker compose up -d"
-      },
-      {
-        "label": "stop db",
-        "type": "shell",
-        "command": "docker compose down"
-      },
-      {
         "label": "Clean app",
         "type": "shell",
         "command": "rm -rf ./build"

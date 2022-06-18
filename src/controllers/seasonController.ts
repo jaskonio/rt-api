@@ -1,11 +1,11 @@
 import { Request, Response }  from 'express'
 import mongoose from 'mongoose'
-import { Season }  from '../models/seasonModel'
+import * as SeasonService   from '../services/seasonService'
 
 export async function get(_req: Request, res: Response) {
 	console.log('Get All Season')
 	try {
-		const seasons = await Season.find({})
+		const seasons = await SeasonService.getAll()
 
 		res.send(seasons)
 	} catch (e){
@@ -24,7 +24,7 @@ export async function getById(req: Request, res: Response) {
 			return
 		}
 
-		const season = await Season.findById(id)
+		const season = await SeasonService.getById(id)
 
 		res.send(season)
 	} catch (e){
@@ -37,9 +37,8 @@ export async function post(req: Request, res: Response) {
 	console.log('POST Season')
 	try {
 		const { name } = req.body
-		const newSeason = Season.build({ name })
 
-		await newSeason.save()
+		const newSeason= await SeasonService.save({ name })
 
 		res.send(newSeason)
 	} catch (e){
@@ -58,18 +57,18 @@ export async function put(req: Request, res: Response) {
 			return
 		}
         
-		const season = await Season.findById(id)
+		const season = await SeasonService.getById(id)
         
 		if (season == null) {
 			res.status(404).send({ message: 'no data exist for this id' })
 			return
 		}
 
-		const { name, racesIds, leaguesIds } = req.body
+		const { name } = req.body
 
-		await season.update({ name, racesIds, leaguesIds })
+		await SeasonService.update(id, { name })
 
-		const newSeason = await Season.findById(id)
+		const newSeason = await SeasonService.getById(id)
         
 		res.send(newSeason)
 	} catch (e){
@@ -83,7 +82,7 @@ export async function remove(req: Request, res: Response) {
 	try {
 		const id = req.params.id
 
-		await Season.deleteOne({id: id})
+		await SeasonService.remove(id)
 
 		res.status(200).send()
 	} catch (e){

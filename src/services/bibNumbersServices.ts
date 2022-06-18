@@ -1,13 +1,13 @@
-import { BibNumber, BibNumberDoc, IBibNumber }  from '../models/bibNumberModel'
+import { BibNumberModel, BibNumber }  from '../models/bibNumberModel'
 
-export async function getAll(): Promise<(BibNumberDoc & { _id: string })[]>  {
-	const bibNumber = await BibNumber.find({})
+export async function getAll(): Promise<BibNumber[]>  {
+	const bibNumber = await BibNumberModel.find({})
 
 	return bibNumber
 }
 
-export async function getById(id: string): Promise<(BibNumberDoc & { _id: string;}) | null>  {
-	const bibNumber = await BibNumber.findById(id)
+export async function getById(id: string): Promise<BibNumber | null>  {
+	const bibNumber = await BibNumberModel.findById(id)
 
 	if (bibNumber === null) {
 		return null
@@ -16,31 +16,24 @@ export async function getById(id: string): Promise<(BibNumberDoc & { _id: string
 	return bibNumber
 }
 
-export async function save(doc:BibNumberDoc ): Promise<void> {
-	const newBibNumber = BibNumber.build(doc)
-
-	await newBibNumber.save()
+export async function save(model: BibNumber): Promise<void> {
+	await BibNumberModel.create(model)
 }
 
-export async function update(id: string, doc: IBibNumber): Promise<(BibNumberDoc & {_id: string;}) | null> {
+export async function update(id: string, model: BibNumber): Promise<BibNumber| null> {
 	const bibNumber = await getById(id)
 
 	if (bibNumber === null) {
 		throw { message: 'no data exist for this id' }
 	}
 
-	await bibNumber.updateOne(doc)
+	await BibNumberModel.updateOne(model)
 
-	const newBibNumber = await BibNumber.findById(id)
+	const newBibNumber = await BibNumberModel.findById(id)
 
 	return newBibNumber
 }
 
 export async function remove(id: string): Promise<void> {
-	await BibNumber.deleteOne({id: id})
-}
-
-export async function buildDocument(value: IBibNumber): Promise<BibNumberDoc> {
-	const newBibNumber = BibNumber.build(value)
-	return newBibNumber
+	await BibNumberModel.deleteOne({id: id})
 }

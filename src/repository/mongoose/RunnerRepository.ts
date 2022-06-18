@@ -9,8 +9,6 @@ export class RunnerRepository implements IRepository<Irunner> {
 	}
 
 	async update(item: Irunner): Promise<Irunner> {
-		// const runnerDoc = Runner.build(item as Irunner)
-
 		const currentRunnerDoc = await Runner.findById({_id: item.id})
 
 		if (!currentRunnerDoc) {

@@ -1,51 +1,41 @@
-import mongoose from 'mongoose'
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
 
-export interface ICircuitPointsData {
-    dorsal: number
-    fullName: string
-    points: number[]
-    totalPoints: number
-    participaciones: number
-    position: number
+export class CircuitPointsData {
+    @prop({ required: true })
+	public dorsal: number
+
+    @prop({ required: true })
+    public fullName: string
+    
+    @prop({ required: true, type: [Number], default: [] })
+    public points: number[]
+
+    @prop({ required: true })
+    public totalPoints: number
+
+    @prop({ required: true })
+    public participaciones: number
+
+    @prop({ required: true })
+    public position: number
 }
 
-export interface ICircuitPoints {
-    url: string
-    data: ICircuitPointsData[] | null
+const CircuitPointsDataModel = getModelForClass(CircuitPointsData)
 
-    seasonId: string
+export { CircuitPointsDataModel }
+
+
+export class CircuitPoints {
+    @prop({ required: true })
+	public url: string
+
+    @prop({ required: true, ref: () => CircuitPointsData })
+    public data!: Ref<CircuitPointsData[]>
+
+    @prop({ required: true })
+    public seasonId: string
 }
 
-interface circuitPointsModelinterface extends mongoose.Model<CircuitPointsDoc> {
-    build(attr: ICircuitPoints): CircuitPointsDoc
-}
+const CircuitPointsModel = getModelForClass(CircuitPoints)
 
-export interface CircuitPointsDoc extends mongoose.Document {
-    url: string
-    data: ICircuitPointsData[] | null
-
-    seasonId: string
-}
-
-const circuitPointsSchema = new mongoose.Schema({
-	url: {
-		type: String,
-		required: true
-	},
-	data: {
-		type: mongoose.SchemaTypes.Mixed,
-		required: false
-	},
-	seasonId: {
-		type: String,
-		required: true
-	}
-})
-
-circuitPointsSchema.statics.build = (attr: ICircuitPoints) => {
-	return new CircuitPoints(attr)
-}
-
-const CircuitPoints = mongoose.model<CircuitPointsDoc, circuitPointsModelinterface>('CircuitPoints', circuitPointsSchema)
-
-export { CircuitPoints }
+export { CircuitPointsModel }

@@ -1,18 +1,12 @@
 import { Request, Response }  from 'express'
 import mongoose from 'mongoose'
-import { BibNumber } from '../models/bibNumberModel'
-import { CircuitPoints } from '../models/circuitPointsModel'
-import { League } from '../models/leagueModel'
-import { Race } from '../models/raceModel'
-import { RaceProcessed } from '../models/raceProcessedModel'
-import { Ranking } from '../models/rankingModel'
 import * as LeagueService from '../services/leagueService'
 
 export async function get(_req: Request, res: Response) {
 	console.log('Get All League')
 
 	try {
-		const leagues = await League.find({})
+		const leagues = await LeagueService.getAll()
 
 		res.send(leagues)
 	} catch (e){
@@ -32,7 +26,7 @@ export async function getById(req: Request, res: Response) {
 			return
 		}
 
-		const season = await League.findById(id)
+		const season = await LeagueService.getById(id)
 
 		res.send(season)
 	} catch (e){
@@ -47,9 +41,7 @@ export async function post(req: Request, res: Response) {
 
 	try {
 		const { seasonId, name, bibNumberIds } = req.body
-		const newLeague = League.build({ seasonId, name, bibNumberIds })
-
-		await newLeague.save()
+		const newLeague = LeagueService.save({ seasonId, name, bibNumberIds })
 
 		res.send(newLeague)
 	} catch (e){
@@ -69,20 +61,18 @@ export async function put(req: Request, res: Response) {
 			return
 		}
         
-		const league = await League.findById(id)
+		const league = await LeagueService.getById(id)
         
 		if (league == null) {
 			res.status(404).send({ message: 'no data exist for this id' })
 			return
 		}
 
-		const { name, racesIds, leaguesIds } = req.body
+		const { seasonId, name, bibNumberIds } = req.body
 
-		await league.update({ name, racesIds, leaguesIds })
-
-		const newLeague = await League.findById(id)
+		const updatedLeague = await LeagueService.update(id, { seasonId, name, bibNumberIds })
         
-		res.send(newLeague)
+		res.send(updatedLeague)
 	} catch (e){
 		console.log('[ERROR]' + e)
 
@@ -96,7 +86,7 @@ export async function remove(req: Request, res: Response) {
 	try {
 		const id = req.params.id
 
-		await League.deleteOne({id: id})
+		await LeagueService.remove(id)
 
 		res.status(200).send()
 	} catch (e){
@@ -113,47 +103,8 @@ export async function processById(req: Request, res: Response) {
 			res.status(404).send({ message: 'Please provide correct id' })
 			return
 		}
-    
-		const leagueDoc = await League.findById(id)
-        
-		if (leagueDoc == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
 
-		const raceDoc = await Race.findOne({ seasonId: leagueDoc.seasonId })
-
-		if (raceDoc == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
-
-		const raceProcesseDocument = await RaceProcessed.find({ raceId: raceDoc.id })
-
-		if (raceProcesseDocument == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
-
-		const pointsCircuitDocument = await CircuitPoints.findOne({ seasonId: leagueDoc.seasonId })
-
-		if (pointsCircuitDocument == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
-
-		const dorsalesDocument = await BibNumber.find({ id: {$in: leagueDoc.bibNumberIds}})
-
-		if (dorsalesDocument == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
-
-		const data = await LeagueService.processData(raceProcesseDocument, pointsCircuitDocument, dorsalesDocument)
-
-		const rankingDoc = Ranking.build({ data: data, leagueId: leagueDoc.id, raceId: raceProcesseDocument[0].id, processedPoints: true })
-
-		await rankingDoc.save()
+		await LeagueService.processById(id)
 
 		res.status(201).send()
 

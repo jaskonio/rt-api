@@ -3,19 +3,19 @@ import * as pdfUtils from '../utils/pdfUtils'
 import * as requetsUtils from '../utils/requestsUtils'
 
 import { join } from 'path'
-import { CircuitPoints, CircuitPointsDoc, ICircuitPoints, ICircuitPointsData } from '../models/circuitPointsModel'
+import { CircuitPoints, CircuitPointsData, CircuitPointsDataModel, CircuitPointsModel } from '../models/circuitPointsModel'
 
 import * as crypto from 'crypto'
 import { IPDFDataPageTableModel } from '../utils/pdfUtils'
 
-export async function getAll(): Promise<(CircuitPointsDoc & { _id: string })[]>  {
-	const documents = await CircuitPoints.find({})
+export async function getAll(): Promise<CircuitPoints[]>  {
+	const documents = await CircuitPointsModel.find({})
 
 	return documents
 }
 
-export async function getById(id: string): Promise<(CircuitPointsDoc & { _id: string;}) | null>  {
-	const document = await CircuitPoints.findById(id)
+export async function getById(id: string): Promise<CircuitPoints | null>  {
+	const document = await CircuitPointsModel.findById(id)
 
 	if (document === null) {
 		return null
@@ -24,22 +24,20 @@ export async function getById(id: string): Promise<(CircuitPointsDoc & { _id: st
 	return document
 }
 
-export async function save(doc: ICircuitPoints): Promise<CircuitPointsDoc> {
-	const newDocument = CircuitPoints.build(doc)
-
-	await newDocument.save()
+export async function save(newDocument: CircuitPoints): Promise<CircuitPoints> {
+	await CircuitPointsModel.create(newDocument)
 
 	return newDocument
 }
 
-export async function update(id: string, newDocument: ICircuitPoints): Promise<(CircuitPointsDoc & {_id: string;}) | null> {
+export async function update(id: string, newDocument: CircuitPoints): Promise<CircuitPoints | null> {
 	const currentDocument = await getById(id)
 
 	if (currentDocument === null) {
 		throw { message: 'no data exist for this id' }
 	}
 
-	await currentDocument.updateOne(newDocument)
+	await CircuitPointsModel.updateOne(newDocument)
 
 	const updatedDocument = await getById(id)
 
@@ -47,7 +45,7 @@ export async function update(id: string, newDocument: ICircuitPoints): Promise<(
 }
 
 export async function remove(id: string): Promise<void> {
-	await CircuitPoints.deleteOne({id: id})
+	await CircuitPointsModel.deleteOne({id: id})
 }
 
 export async function processById(id: string): Promise<true | null> {
@@ -59,15 +57,11 @@ export async function processById(id: string): Promise<true | null> {
 
 	const data = await getDatabyCircuitPoints(circuitPointDocument.url)
 
-	await circuitPointDocument.updateOne({data: data})
+	circuitPointDocument.data = data
+
+	await CircuitPointsModel.findOneAndUpdate({id: id}, circuitPointDocument)
 
 	return true
-}
-
-export async function buildDocument(value: ICircuitPoints): Promise<CircuitPointsDoc> {
-	const newDocument = CircuitPoints.build(value)
-
-	return newDocument
 }
 
 async function getDatabyCircuitPoints(circuitPointUrl: string) {
@@ -94,8 +88,8 @@ async function getDatabyCircuitPoints(circuitPointUrl: string) {
 	}
 }
 
-function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData[] {
-	let rows: ICircuitPointsData[] = []
+function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): CircuitPointsData[] {
+	let rows: CircuitPointsData[] = []
 	rows = []
 
 	data.pageTables.forEach((pageTable: IPDFDataPageTableModel) => {
@@ -108,15 +102,15 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): ICircuitPointsData
 			if (pageTable.page == 1 && (index == 0 || index == 1)) {
 				return
 			}
-
-			const newRow:ICircuitPointsData = {
+			
+			const newRow = new CircuitPointsDataModel({
 				dorsal: row[0],
 				fullName: row[1],
 				points: [ row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11] ],
 				totalPoints: row[12],
 				participaciones: row[13],
 				position: row[14]
-			}
+			})
 
 			rows.push(newRow)
 		})

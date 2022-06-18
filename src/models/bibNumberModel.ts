@@ -1,40 +1,16 @@
-import mongoose from 'mongoose'
+import { getModelForClass, prop } from '@typegoose/typegoose'
 
-export interface IBibNumber {
-    bibNumner: number
-    runnerId: string
-    disqualifiedRaceIds: [string]
+export class BibNumber{
+	@prop({ required: true })
+	public bibNumner: number
+
+	@prop({ required: true })
+	public runnerId: string
+
+	@prop({ required: false, default: [], type: [String] })
+	public disqualifiedRaceIds!: string[]
 }
 
-interface bibNumberModelinterface extends mongoose.Model<BibNumberDoc> {
-    build(attr: IBibNumber): BibNumberDoc
-}
+const BibNumberModel = getModelForClass(BibNumber)
 
-export interface BibNumberDoc extends mongoose.Document {
-    bibNumner: number
-    runnerId: string
-    disqualifiedRaceIds: [string]
-}
-
-const bibNumberSchema = new mongoose.Schema({
-	bibNumner: {
-		type: Number,
-		required: true
-	},
-	runnerId: {
-		type: String,
-		required: true
-	},
-	disqualifiedRaceIds: {
-		type: [String],
-		required: false
-	}
-})
-
-bibNumberSchema.statics.build = (attr: IBibNumber) => {
-	return new BibNumber(attr)
-}
-
-const BibNumber = mongoose.model<BibNumberDoc, bibNumberModelinterface>('BibNumbers', bibNumberSchema)
-
-export { BibNumber }
+export { BibNumberModel }
