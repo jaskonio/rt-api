@@ -132,3 +132,5 @@ dist
 build/
 build/*
 build/**/*.js
+
+package-lock.json
