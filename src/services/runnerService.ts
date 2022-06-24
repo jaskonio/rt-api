@@ -1,35 +1,39 @@
-import { Irunner }  from '../models/runnerModel'
-import { RunnerRepository } from '../repository/mongoose/RunnerRepository'
+import { Runner, RunnerModel } from '../models/runnerModel'
 
-const runnerRepository = new RunnerRepository()
-
-export async function getAll(): Promise<Irunner[]> {
-
-	const runners = await runnerRepository.getAll()
+export async function getAll(): Promise<Runner[]> {
+	const runners = await RunnerModel.find({})
 
 	return runners
 }
 
-export async function getById(id: string): Promise<Irunner> {
-	
-	const runner = await runnerRepository.getById(id)
+export async function getById(id: string): Promise<Runner | null> {
+	const runner = await RunnerModel.findById(id)
 
 	return runner
 }
 
-export async function save(runner: Irunner): Promise<Irunner> {
+export async function save(runner: Runner): Promise<Runner> {
+	const newRunner = await new RunnerModel(runner)
 
-	const newRunner = await runnerRepository.add(runner)
+	await newRunner.save()
 
 	return newRunner
 }
 
-export async function update(runner: Irunner): Promise<Irunner> {
-	const runnerUpdated = await runnerRepository.update(runner)
-	return runnerUpdated
+export async function update(id: string, runner: Runner): Promise<Runner | null> {
+	const newRunner = await RunnerModel.findById(id)
+
+	if (newRunner == null) {
+		return null
+	}
+	
+	await newRunner.update(runner)
+
+	await newRunner.save()
+
+	return newRunner
 }
 
-export async function remove(id: string): Promise<boolean> {
-	const removed = await runnerRepository.remove(id)
-	return removed
+export async function remove(id: string): Promise<void> {
+	await RunnerModel.remove(id)
 }

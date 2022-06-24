@@ -1,6 +1,5 @@
 import { Request, Response }  from 'express'
 import mongoose from 'mongoose'
-import { Race }  from '../models/raceModel'
 import * as RaceService from '../services/raceService'
 
 export async function get(_req: Request, res: Response) {
@@ -36,7 +35,7 @@ export async function post(req: Request, res: Response) {
 
 		const { processed, celebrateDay, name, url, seasonId } = req.body
 
-		const newrace = RaceService.save({ processed, celebrateDay, name, url, seasonId })
+		const newrace = RaceService.save({ _id: '', processed, celebrateDay, name, url, seasonId })
 
 		res.json(newrace)
 	} catch (e) {
@@ -54,19 +53,10 @@ export async function put(req: Request, res: Response) {
 			res.status(404).send({ message: 'Please provide correct id' })
 			return
 		}
-        
-		const document = await RaceService.getById(id)
-        
-		if (document == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
 
 		const { name, processed, celebrateDay, url, seasonId } = req.body
 
-		await document.update({ name, processed, celebrateDay, url, seasonId })
-
-		const updatedDocument = await RaceService.getById(id)
+		const updatedDocument = await RaceService.update(id, { _id: id, name, processed, celebrateDay, url, seasonId })
         
 		res.send(updatedDocument)
 	} catch (e){
@@ -101,7 +91,7 @@ export async function processById(req: Request, res: Response) {
 			return
 		}
     
-		const race = await Race.findById(id)
+		const race = await RaceService.getById(id)
         
 		if (race == null) {
 			res.status(404).send({ message: 'no data exist for this id' })

@@ -61,13 +61,6 @@ export async function put(req: Request, res: Response) {
 			return
 		}
         
-		const league = await LeagueService.getById(id)
-        
-		if (league == null) {
-			res.status(404).send({ message: 'no data exist for this id' })
-			return
-		}
-
 		const { seasonId, name, bibNumberIds } = req.body
 
 		const updatedLeague = await LeagueService.update(id, { seasonId, name, bibNumberIds })

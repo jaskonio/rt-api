@@ -1,51 +1,49 @@
 import axios from 'axios'
 import * as pdfUtils from '../utils/pdfUtils'
 import * as requetsUtils from '../utils/requestsUtils'
-
-import { join } from 'path'
-import { CircuitPoints, CircuitPointsData, CircuitPointsDataModel, CircuitPointsModel } from '../models/circuitPointsModel'
-
 import * as crypto from 'crypto'
 import { IPDFDataPageTableModel } from '../utils/pdfUtils'
+import { join } from 'path'
+import { SeasonCircuitPoints, SeasonCircuitPointsModel } from '../models/seasonCircuitPointsModel'
+import { RunnerCircuitPoints, RunnerCircuitPointsModel } from '../models/runnerCircuitPointsModel'
 
-export async function getAll(): Promise<CircuitPoints[]>  {
-	const documents = await CircuitPointsModel.find({})
+
+export async function getAll(): Promise<SeasonCircuitPoints[]>  {
+	const documents = await SeasonCircuitPointsModel.find({})
 
 	return documents
 }
 
-export async function getById(id: string): Promise<CircuitPoints | null>  {
-	const document = await CircuitPointsModel.findById(id)
-
-	if (document === null) {
-		return null
-	}
-
+export async function getById(id: string): Promise<SeasonCircuitPoints | null>  {
+	const document = await SeasonCircuitPointsModel.findById(id)
+	
 	return document
 }
 
-export async function save(newDocument: CircuitPoints): Promise<CircuitPoints> {
-	await CircuitPointsModel.create(newDocument)
+export async function save(seasonCircuitPoints: SeasonCircuitPoints): Promise<SeasonCircuitPoints> {
+	const newDocument = new SeasonCircuitPointsModel(seasonCircuitPoints)
+
+	await newDocument.save()
 
 	return newDocument
 }
 
-export async function update(id: string, newDocument: CircuitPoints): Promise<CircuitPoints | null> {
-	const currentDocument = await getById(id)
+export async function update(id: string, newDocument: SeasonCircuitPoints): Promise<SeasonCircuitPoints | null> {
+	const currentDocument = await SeasonCircuitPointsModel.findById(id)
 
 	if (currentDocument === null) {
-		throw { message: 'no data exist for this id' }
+		return null
 	}
 
-	await CircuitPointsModel.updateOne(newDocument)
+	await currentDocument.update(newDocument)
 
-	const updatedDocument = await getById(id)
+	await currentDocument.save()	
 
-	return updatedDocument
+	return currentDocument
 }
 
 export async function remove(id: string): Promise<void> {
-	await CircuitPointsModel.deleteOne({id: id})
+	await SeasonCircuitPointsModel.deleteOne({id: id})
 }
 
 export async function processById(id: string): Promise<true | null> {
@@ -59,7 +57,7 @@ export async function processById(id: string): Promise<true | null> {
 
 	circuitPointDocument.data = data
 
-	await CircuitPointsModel.findOneAndUpdate({id: id}, circuitPointDocument)
+	await SeasonCircuitPointsModel.findOneAndUpdate({id: id}, circuitPointDocument)
 
 	return true
 }
@@ -88,8 +86,8 @@ async function getDatabyCircuitPoints(circuitPointUrl: string) {
 	}
 }
 
-function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): CircuitPointsData[] {
-	let rows: CircuitPointsData[] = []
+function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): RunnerCircuitPoints[] {
+	let rows: RunnerCircuitPoints[] = []
 	rows = []
 
 	data.pageTables.forEach((pageTable: IPDFDataPageTableModel) => {
@@ -103,7 +101,7 @@ function convertPdfDataToTable(data: pdfUtils.IPDFDataModel): CircuitPointsData[
 				return
 			}
 			
-			const newRow = new CircuitPointsDataModel({
+			const newRow = new RunnerCircuitPointsModel({
 				dorsal: row[0],
 				fullName: row[1],
 				points: [ row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11] ],

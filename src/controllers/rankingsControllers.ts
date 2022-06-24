@@ -1,12 +1,12 @@
 import { Request, Response }  from 'express'
 import mongoose from 'mongoose'
-import { Ranking }  from '../models/rankingModel'
+import * as RankingsService from '../services/rankingsService'
 
 export async function get(_req: Request, res: Response) {
 	console.log('Get All Ranking')
 
 	try {
-		const documents = await Ranking.find({})
+		const documents = await RankingsService.getAll()
 
 		res.send(documents)
 	} catch (e){
@@ -26,7 +26,7 @@ export async function getById(req: Request, res: Response) {
 			return
 		}
 
-		const document = await Ranking.findById(id)
+		const document = await RankingsService.getById(id)
 
 		res.send(document)
 	} catch (e){
@@ -42,7 +42,7 @@ export async function remove(req: Request, res: Response) {
 	try {
 		const id = req.params.id
 
-		await Ranking.deleteOne({id: id})
+		await RankingsService.remove(id)
 
 		res.status(200).send()
 	} catch (e){

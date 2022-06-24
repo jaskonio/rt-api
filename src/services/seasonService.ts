@@ -8,10 +8,6 @@ export async function getAll(): Promise<Season[]> {
 export async function getById(id: string): Promise<Season | null> {
 	const season = await SeasonModel.findById(id)
 
-	if (!season) {
-		return null
-	}
-
 	return season
 }
 

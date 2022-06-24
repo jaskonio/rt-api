@@ -1,45 +1,44 @@
 import axios from 'axios'
-import { IRace, Race, RaceDoc }  from '../models/raceModel'
-import { RaceRow } from '../models/raceRowModel'
+import { Race, RaceModel }  from '../models/raceModel'
+import { RaceRowModel} from '../models/raceRowModel'
 import { IRankingsSportmaniacs, IResponseSportmaniacs } from '../models/sportmaniacsModel'
-import { RaceProcessed } from '../models/raceProcessedModel'
 
-export async function getAll() {
-	const races = await Race.find({})
+export async function getAll(): Promise<Race[]> {
+	const races = await RaceModel.find({})
 
 	return races
 }
 
-export async function getById(id: string) {
-	const race = await Race.findById(id)
+export async function getById(id: string): Promise<Race | null> {
+	const race = await RaceModel.findById(id)
 
 	return race
 }
 
-export async function save(document: IRace) {
-	const newDocument = Race.build(document)
+export async function save(race: Race): Promise<Race> {
+	const newDocument = new RaceModel(race)
 
 	await newDocument.save()
 
 	return newDocument
 }
 
-export async function update(id: string, newDocument: IRace): Promise<(RaceDoc & {_id: string;}) | null> {
-	const currentDocument = await getById(id)
+export async function update(id: string, race: Race): Promise<Race | null> {
+	const currentDocument = await RaceModel.findById(id)
 
 	if (currentDocument === null) {
-		throw { message: 'no data exist for this id' }
+		return null
 	}
 
-	await currentDocument.updateOne(newDocument)
+	await currentDocument.updateOne(race)
 
-	const updatedDocument = await getById(id)
+	await currentDocument.save()
 
-	return updatedDocument
+	return currentDocument
 }
 
-export async function remove(id: string) {
-	await Race.deleteOne({id: id})
+export async function remove(id: string): Promise<void> {
+	await RaceModel.deleteOne({id: id})
 }
 
 export async function getRankingsDatabyRace(url: string): Promise<IRankingsSportmaniacs[]> {
@@ -63,18 +62,19 @@ export async function getRankingsDatabyRace(url: string): Promise<IRankingsSport
 	}
 }
 
-export async function saveRowData(race: RaceDoc): Promise<IRankingsSportmaniacs[]> {
+export async function saveRowData(race: Race): Promise<IRankingsSportmaniacs[]> {
 	try {
 		const data = await getRankingsDatabyRace(race.url)
 
-		const raceRowDocument = await RaceRow.findOne({ raceId: race.id})
+		const raceRowDocument = await RaceRowModel.findOne({ raceId: race._id})
 
 		if (raceRowDocument == null) {
-			const raceRowDocument = await RaceRow.build({raceId: race._id, data: data})
-			await raceRowDocument.save()
+			const newRaceRowDocument = new RaceRowModel({raceId: race._id, data: data})
+			await newRaceRowDocument.save()
 		}
 		else{
-			raceRowDocument.updateOne({data: data})
+			raceRowDocument.update({data: data})
+			await raceRowDocument.save()
 		}
 
 		return data
@@ -98,17 +98,17 @@ export function getProcessedData(rows: IRankingsSportmaniacs[]): IRankingsSportm
 	return filteredRows
 }
 
-export async function saveProcessedData(race: RaceDoc, rows: IRankingsSportmaniacs[]): Promise<IRankingsSportmaniacs[]> {
+export async function saveProcessedData(race: Race, rows: IRankingsSportmaniacs[]): Promise<IRankingsSportmaniacs[]> {
 	const data = getProcessedData(rows)
 
-	const raceProcessedDocument = await RaceProcessed.findOne({ raceId: race.id})
+	const raceProcessedDocument = await RaceRowModel.findOne({ raceId: race._id})
 
 	if (raceProcessedDocument == null) {
-		const raceProcessedDocument = await RaceProcessed.build({raceId: race._id, data: data})
-		await raceProcessedDocument.save()
+		const newRaceProcessedDocument = await new RaceRowModel({raceId: race._id, data: data})
+		await newRaceProcessedDocument.save()
 	}
 	else{
-		raceProcessedDocument.updateOne({data: data})
+		raceProcessedDocument.update({data: data})
 	}
 
 	return data

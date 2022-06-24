@@ -36,8 +36,8 @@ export async function getById(req: Request, res: Response) {
 export async function post(req: Request, res: Response) {
 	console.log('POST Runner')
 	try {
-		const { id, name, last_name, photo } = req.body
-		const newRunner = await RunnerService.save({ id, name, last_name, photo })
+		const { name, last_name, photo } = req.body
+		const newRunner = await RunnerService.save({ name, last_name, photo })
 
 		res.send(newRunner)
 	} catch (e){
@@ -65,7 +65,7 @@ export async function put(req: Request, res: Response) {
 
 		const { name, last_name, photo } = req.body
 
-		const newRunner = await RunnerService.update({ id, name, last_name, photo })
+		const newRunner = await RunnerService.update(id, { name, last_name, photo })
         
 		res.send(newRunner)
 	} catch (e){

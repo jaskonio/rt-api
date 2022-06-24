@@ -1,9 +1,7 @@
-
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
-import { Race } from './raceModel'
 import { League } from './leagueModel'
 
-export interface IRunnerData {
+export interface ISummaryRunnerData {
     dorsal: string
 
     position: number
@@ -22,25 +20,19 @@ export interface IRunnerData {
     lastPositionCategoryCircuit: number
     bestPace: string
     bestPositionCategotyCircuit: number
-    texBestPositionCategotyCircuit: string
+    texBestPositionCategotyCircuit: number
 
     pointsCurrentRace: number
 }
 
-export class Ranking{
-	@prop({ required: true })
-	public data: IRunnerData[]
-	
-	@prop({ required: true })
-	public processedPoints: string
-
-	@prop({ required: false, ref: () => Race })
-	public raceId: Ref<Race>
-	
-    @prop({ required: false, ref: () => League })
+export class SummaryRanking{
+	@prop({ required: true, ref: () => League})
 	public leagueId: Ref<League>
+
+	@prop({ required: true })
+	public data: ISummaryRunnerData[]
 }
 
-const RankingModel = getModelForClass(Ranking)
+const SummaryRankingModel = getModelForClass(SummaryRanking)
 
-export { RankingModel }
+export { SummaryRankingModel }

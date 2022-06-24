@@ -1,35 +1,15 @@
-import mongoose from 'mongoose'
 import { IRankingsSportmaniacs } from './sportmaniacsModel'
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
+import { Race } from './raceModel'
 
-export interface IRaceRow {
-    raceId: string
-    data: IRankingsSportmaniacs[]
+export class RaceRow{
+	@prop({ required: true, ref: () => Race })
+	public raceId: Ref<Race>
+
+	@prop({ required: true })
+	public data: IRankingsSportmaniacs[]
 }
 
-interface raceRowModelinterface extends mongoose.Model<RaceRowDoc> {
-    build(attr: IRaceRow): RaceRowDoc
-}
+const RaceRowModel = getModelForClass(RaceRow)
 
-export interface RaceRowDoc extends mongoose.Document {
-    raceId: string
-    data: IRankingsSportmaniacs[]
-}
-
-const raceRowSchema = new mongoose.Schema({
-	raceId: {
-		type: String,
-		required: true
-	},
-	data: {
-		type: mongoose.SchemaTypes.Mixed,
-		required: false
-	}
-})
-
-raceRowSchema.statics.build = (attr: IRaceRow) => {
-	return new RaceRow(attr)
-}
-
-const RaceRow = mongoose.model<RaceRowDoc, raceRowModelinterface>('RaceRows', raceRowSchema)
-
-export { RaceRow }
+export { RaceRowModel }

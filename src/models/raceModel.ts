@@ -1,53 +1,26 @@
-import mongoose from 'mongoose'
+import { Season } from './seasonModel'
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
 
-export interface IRace {
-    name: string
-    processed: boolean
-    celebrateDay: string
-    url: string
-    seasonId: string
+export class Race{
+	@prop({ required: false })
+	public _id!: string
+
+	@prop({ required: true })
+	public name: string
+
+	@prop({ required: true })
+	public processed: boolean
+
+	@prop({ required: true })
+	public celebrateDay: string
+
+	@prop({ required: true })
+	public url: string
+
+	@prop({ required: true, ref: () => Season })
+	public seasonId: Ref<Season>
 }
 
-interface raceModelinterface extends mongoose.Model<RaceDoc> {
-    build(attr: IRace): RaceDoc
-}
+const RaceModel = getModelForClass(Race)
 
-export interface RaceDoc extends mongoose.Document {
-    name: string
-    processed: boolean
-    celebrateDay: string
-    url: string
-    seasonId: string
-}
-
-const raceSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true
-	},
-	processed: {
-		type: Boolean,
-		default: false,
-		required: false
-	},
-	celebrateDay: {
-		type: String,
-		required: true
-	},
-	url: {
-		type: String,
-		required: true
-	},
-	seasonId: {
-		type: String,
-		required: true
-	}
-})
-
-raceSchema.statics.build = (attr: IRace) => {
-	return new Race(attr)
-}
-
-const Race = mongoose.model<RaceDoc, raceModelinterface>('Races', raceSchema)
-
-export { Race }
+export { RaceModel }
