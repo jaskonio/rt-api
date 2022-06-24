@@ -2,5 +2,13 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
     },
-    "eslint.validate": ["javascript"]
-   }
+    "eslint.validate": [
+      "javascript"
+    ],
+    "DockerRun.DisableAutoGenerateConfig": true,
+    "oneDarkPro.bold": true,
+    "oneDarkPro.italic": true,
+    "oneDarkPro.vivid": true,
+    "editor.guides.bracketPairs": true,
+    "editor.bracketPairColorization.enabled": true
+}
