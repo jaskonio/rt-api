@@ -11,14 +11,12 @@
     "lint": "eslint ./src/ --ext .ts"
   },
   "dependencies": {
-    "@typegoose/typegoose": "^9.9.0",
     "axios": "0.27.2",
     "cookie-parser": "1.4.4",
     "debug": "2.6.9",
     "dotenv": "16.0.1",
     "express": "4.16.4",
     "http-errors": "1.6.3",
-    "jade": "0.29.0",
     "mongodb": "4.6.0",
     "mongoose": "6.3.6",
     "morgan": "1.9.1",
@@ -31,6 +29,7 @@
     "@types/mongoose": "5.11.97",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
+    "@typegoose/typegoose": "^9.9.0",
     "eslint": "^8.17.0",
     "nodemon": "2.0.16",
     "standard": "^17.0.0",
