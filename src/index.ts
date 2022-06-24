@@ -41,7 +41,7 @@ function logErrors(err: Error , _req: Request, _res: Response, next: NextFunctio
 	next(err)
 }
 
-function errorHandler(err: Error , _req: Request, res: Response) {
+function errorHandler(err: Error , _req: Request, res: Response, _next: NextFunction) {
 	console.error('errorHandler')
 
 	res.status(500).send({ error: err })
