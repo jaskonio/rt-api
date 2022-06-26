@@ -1,9 +1,10 @@
 import { getModelForClass, prop, Ref } from '@typegoose/typegoose'
+import { Season } from './seasonModel'
 import { BibNumber } from './bibNumberModel'
 
 export class League{
-	@prop({ required: true })
-	public seasonId: number
+	@prop({ required: true, ref: () => Season })
+	public seasonId: Ref<Season>
 
 	@prop({ required: true })
 	public name: string

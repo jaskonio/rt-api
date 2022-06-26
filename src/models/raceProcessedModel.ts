@@ -7,7 +7,7 @@ export class RaceProcessed{
 	public raceId: Ref<Race>
 
 	@prop({ required: true })
-	public data: IRankingsSportmaniacs
+	public data: IRankingsSportmaniacs[]
 }
 
 const RaceProcessedModel = getModelForClass(RaceProcessed)
